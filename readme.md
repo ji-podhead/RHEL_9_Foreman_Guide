@@ -90,27 +90,18 @@ $ su root
 ```Bash
 # firewall-cmd --runtime-to-permanent
 ```
-> ***>> check if it works <<***
+ > ***>> check if it works <<***
  >  ```Bash
  >  # firewall-cmd --list-all
  >  ```
- > should ouput:
- > ```markdown
->public (active)
->  target: default
->  icmp-block-inversion: no
->  interfaces: enp2s0
->  sources: 
->  services: cockpit dhcp dhcpv6-client dns http https mdns puppetmaster ssh tftp
->  ports: 5646/tcp 5647/tcp 8000/tcp 9090/tcp
->  protocols: 
->  forward: yes
->  masquerade: no
->  forward-ports: 
-> source-ports: 
-> icmp-blocks: 
->  rich rules: 
-> ```
+ >  ```markdown
+ >...
+ >  interfaces: enp2s0
+ >  sources: 
+ >  services: cockpit dhcp dhcpv6-client dns http https mdns puppetmaster ssh tftp
+ >  ports: 5646/tcp 5647/tcp 8000/tcp 9090/tcp
+ >...    
+ > ```
 ## Install
 
 ***get the repos***
@@ -165,7 +156,9 @@ The full log is at /var/log/foreman-installer/katello.log
 
 The full log is at /var/log/foreman-installer/katello.log
 ```
+
 ---
+
 > ***>> check if it worked <<***
 > ```Bash
 > # dnf repolist enabled
@@ -179,7 +172,7 @@ The full log is at /var/log/foreman-installer/katello.log
 > puppet7                   Puppet 7 Repository el 9 - x86_64
 >```
 
-
+---
 > ****(optional)* delete old/wrong repo:***
 > - edit the foreman.repo file and remove the flawed ones:
 > ```Bash
