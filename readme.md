@@ -239,7 +239,7 @@ The full log is at /var/log/foreman-installer/katello.log
 > you can also use telnet, lsof, etc
 
 ## TFTP
-
+***install***
 ```Bash
 # sudo dnf install tftp-server -y
 ```
@@ -306,7 +306,7 @@ $ nano /usr/lib/systemd/system/tftp.service
 
 
 
--  tftp service can be activated by using systemctl enable tftp (not xintetd)!
+-  tftp service can be activated by `using systemctl enable tftp` (not xintetd)!
 >```Bash
 > # systemctl enable tftp
 >```
