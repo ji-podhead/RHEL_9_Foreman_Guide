@@ -125,7 +125,7 @@ $ su root
 ...
   Success!
   * Foreman is running at https://my_hostname.speedport.ip
-      Initial credentials are admin / LjSnHiw9f96PTTen
+      Initial credentials are admin / <pass>
   * To install an additional Foreman proxy on separate machine continue by running:
 
       foreman-proxy-certs-generate --foreman-proxy-fqdn "$FOREMAN_PROXY" --certs-tar "/root/$FOREMAN_PROXY-certs.tar.gz"
@@ -135,10 +135,11 @@ The full log is at /var/log/foreman-installer/katello.log
 ```
 ---
 > **we connect to foreman dashboard by using**
+>```
 > URL: https://my_hostname.speedport.ip
 > user: admin
-> pass:  LjSnHiw9f96PTTen`
-
+> pass:  <pass>`
+>```
 
 ---
 ***install the Discovery Plugin***
