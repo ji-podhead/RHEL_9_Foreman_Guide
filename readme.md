@@ -248,15 +248,15 @@ The full log is at /var/log/foreman-installer/katello.log
    ```
    
 >```
->default menu.c32
->timeout 300
->label ForemanBootImage
-  >  menu label ^Foreman Boot Image
-   > kernel /path/to/your/boot/image/vmlinuz
-   > append initrd=/path/to/your/boot/image/initrd.img root=/dev/nfs nfsroot=:192.168.0.1:/var> > /lib/tftboot/boot ip=dhcp
-   >```
+> default menu.c32
+> timeout 300
+> label ForemanBootImage
+>  menu label ^Foreman Boot Image
+> kernel /path/to/your/boot/image/vmlinuz
+> append initrd=/path/to/your/boot/image/initrd.img root=/dev/nfs nfsroot=:192.168.0.1:/var> > /lib/tftboot/boot ip=dhcp
+> ```
 
-   ```Bash
+```Bash
   [root@cc ji]# sudo chmod -R 777 /var/lib/tftpboot
 [root@cc ji]# sudo chown -R nobody: /var/lib/tftpboot
 ```
@@ -265,35 +265,38 @@ The full log is at /var/log/foreman-installer/katello.log
 [ji@cc ~]$ nano /usr/lib/systemd/system/tftp.service
 ```
 
-> ```
+>```
 > [Unit]
 > Description=Tftp Server
->Requires=tftp.socket
->Documentation=man:in.tftpd
->[Service]
->ExecStart=/usr/sbin/in.tftpd -s /var/lib/tftpboot
->StandardInput=socket
->[Install]
->Also=tftp.socket
+> Requires=tftp.socket
+> Documentation=man:in.tftpd
+> [Service]
+> ExecStart=/usr/sbin/in.tftpd -s /var/lib/tftpboot
+> StandardInput=socket
+> [Install]
+> Also=tftp.socket
 >```
+
 - not sure if this was required:
-> ```Bash
+  
+>```Bash
 > sudo nano /etc/xinetd.d/tftp
 >```
+
 >```
-	> service tftp
+> service tftp
 > {
-   > socket_type             = dgram
-   > protocol                = udp
-   > wait                    = yes
-   > user                    = root
-  >  server                  = /usr/sbin/in.tftpd
- >   server_args             = -s /var/lib/tftpboot
- >   disable                 = no
- >   per_source              = 11
- >   cps                     = 100 2
-  >  flags                   = IPv4
->}
+> socket_type             = dgram
+> protocol                = udp
+> wait                    = yes
+> user                    = root
+> server                  = /usr/sbin/in.tftpd
+> server_args             = -s /var/lib/tftpboot
+> disable                 = no
+> per_source              = 11
+> cps                     = 100 2
+> flags                   = IPv4
+> }
 >```
 
 
