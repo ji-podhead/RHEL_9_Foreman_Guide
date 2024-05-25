@@ -171,6 +171,14 @@ sequenceDiagram
 > - ***Sends Boot Image:*** The TFTP server sends the boot image to the client.
 > - ***Executes Boot Image:*** The client executes the boot image, initiating the boot process from the network.
 
+## VLAN
+> MAAS:
+> - Focus: Direct management of VLANs and subnets within the platform itself.
+> - Functionality: Allows creation and management of multiple VLANs, supporting both tagged and untagged VLANs on managed switches. Each fabric has a default VLAN, with additional VLANs added for logical separation within the same physical infrastructure.
+> Foreman:
+> - Focus: Primarily focused on provisioning hosts and configuring their network settings.
+> - Functionality: Can provision hosts across various subnets but does not directly manage VLANs. Requires separate network-level configuration for creating and managing VLANs.
+> In essence, MAAS offers integrated VLAN and subnet management within its environment, whereas Foreman focuses on host provisioning and network configuration, leaving VLAN management to external network administration.
 ## Preperation
 
 - make sure you have a static hostname (we will use `my_hostname`)
