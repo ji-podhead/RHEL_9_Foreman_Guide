@@ -148,12 +148,7 @@ sequenceDiagram
 
 ### PXE and TFTP
 > This diagram outlines the basic steps involved in the PXE and TFTP boot process:
-> - Client Starts Booting: The client device initiates the boot process.
-> - Sends DHCPDISCOVER: The client sends a DHCPDISCOVER packet to discover available DHCP servers.
-> - Receives DHCPOFFER: The DHCP server responds with a DHCPOFFER packet, providing the client with an IP address and the address of the TFTP server.
-> - Requests Boot Image: The client requests the boot image from the TFTP server.
-> - Sends Boot Image: The TFTP server sends the boot image to the client.
-> - Executes Boot Image: The client executes the boot image, initiating the boot process from the network.
+
 
 ```mermaid
 sequenceDiagram
@@ -169,7 +164,12 @@ sequenceDiagram
     Client->>+PXE_DP: Executes boot image
     Note over Client: Client boots from network
 ```
-
+> - ***Client Starts Booting:*** The client device initiates the boot process.
+> - ***Sends DHCPDISCOVER:*** The client sends a DHCPDISCOVER packet to discover available DHCP servers.
+> - ***Receives DHCPOFFER:*** The DHCP server responds with a DHCPOFFER packet, providing the client with an IP address and the address of the TFTP server.
+> - ***Requests Boot Image:*** The client requests the boot image from the TFTP server.
+> - ***Sends Boot Image:*** The TFTP server sends the boot image to the client.
+> - ***Executes Boot Image:*** The client executes the boot image, initiating the boot process from the network.
 
 ## Preperation
 
