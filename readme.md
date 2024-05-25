@@ -22,6 +22,7 @@ You will be ready to discover and provision your physical servers and workstatio
 >       - rsync (standalone, or better: ***rsnapshot***)
 > - we use `Rocky Linux 9.4` in this example
 ## Required Knowledge
+- this might be a little redundant at the moment, but i thought its better to explain everything step after step, so the diagramms wont get to large
 ### DHCP
 ```mermaid
 sequenceDiagram
@@ -130,28 +131,28 @@ sequenceDiagram
 
 ```mermaid
 sequenceDiagram
-    participant PC as Client
-    participant VLAN as VLAN
-    participant ExternalDNS as External DNS Server
-    participant DNSRouter as DNS in Router
-    participant DHCP as DHCP in Router
-    participant Storage as Storage (PC)
-    participant HostsFile as Hosts File
-    Note over PC: Boot process begins
-    PC->>+VLAN: Sends DHCPDISCOVER
-    VLAN->>-PC: Redirects DHCPDISCOVER to DHCP
-    PC->>+DHCP: Sends DHCPREQUEST
-    DHCP->>-PC: Sends DHCPOFFER with IP, Gateway, DNS Server (DNSRouter), and Subnet Mask
-    Note over DNSRouter: PC configures DNS settings based on DHCP offer
-    PC->>+HostsFile: Reads Hosts File for custom mappings
-    HostsFile-->>-PC: Returns mapped IP addresses if available
-    Note over PC: PC uses DNSRouter for standard lookups within local network
-    PC->>+ExternalDNS: Sends DNS queries for domain names outside local network
-    ExternalDNS->>-PC: Sends answers with IP addresses
-    Note over PC: PC uses Hosts File for custom mappings
-    PC->>+Storage: Stores network configuration (IP, Gateway, DNS)
-    Storage-->>-PC: Confirms storage
-    Note over PC: PC is now fully configured and connected
+    participant Client as Client Device
+    participant PXE as PXE Server
+    participant TFTP as TFTP Server
+    participant Smart_Proxy as Smart Proxy
+    participant Foreman_Discovery_Image as Foreman Discovery Image
+    participant Foreman as Foreman Server
+    Note over Client: Client starts booting
+    Client->>+PXE: Sends PXE request
+    PXE->>+TFTP: Requests boot image
+    TFTP->>+Client: Sends boot image
+    Note over Client: Client boots from network
+    Client->>+Smart_Proxy: Sends DHCPDISCOVER
+    Smart_Proxy->>+Client: Sends DHCPOFFER with IP, TFTP Server info
+    Client->>+Foreman_Discovery_Image: Requests boot image
+    Foreman_Discovery_Image->>+Client: Sends boot image
+    Client->>+Foreman: Executes boot image
+    Note over Client: Client discovers network
+    Client->>+Foreman: Sends discovery data
+    Foreman->>+Smart_Proxy: Processes discovery data
+    Smart_Proxy->>+Foreman: Acknowledges processing
+    Note over Client: Client is now provisioned
+
 
 
 
@@ -185,6 +186,37 @@ sequenceDiagram
 > - ***Sends Boot Image:*** The TFTP server sends the boot image to the client.
 > - ***Executes Boot Image:*** The client executes the boot image, initiating the boot process from the network.
 
+## Foreman Smartproxy
+```mermaid
+sequenceDiagram
+    participant Client as Client Device
+    participant PXE as PXE (Preboot Execution Environment)
+    participant DHCP_Server as DHCP Server
+    participant DNS_Server as DNS Server
+    participant Foreman as Foreman
+    participant SmartProxy as SmartProxy
+    participant TFTP_Server as TFTP Server
+    participant HTTP_Server as HTTP Server
+    Note over Client: Client starts boot process
+    Client->>+PXE: Initiates PXE Boot
+    PXE->>+DHCP_Server: Sends DHCPDISCOVER
+    DHCP_Server->>+PXE: Sends DHCPOFFER with IP Address
+    PXE->>+Client: Sends IP Address
+    Note over Client: Client receives IP Address
+    Client->>+DNS_Server: Sends DNS query for Foreman Domain
+    DNS_Server->>+Client: Sends IP Address for Foreman Domain
+    Note over Client: Client configures DNS settings
+    Client->>+SmartProxy: Sends PXE Boot Request
+    SmartProxy->>+Foreman: Sends request for Host Provisioning
+    Foreman->>+HTTP_Server: Sends request for Host Template
+    HTTP_Server->>+Foreman: Sends Host Template
+    Foreman->>+SmartProxy: Sends response with Host Information
+    SmartProxy->>+Client: Sends Boot Image via TFTP
+    Client->>+TFTP_Server: Sends request for Boot Image
+    TFTP_Server->>+Client: Sends Boot Image
+    Note over Client: Client boots from network
+
+```
 
 
 ## Preperation
