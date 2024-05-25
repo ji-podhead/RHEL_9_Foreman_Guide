@@ -23,6 +23,7 @@ You will be ready to discover and provision your physical servers and workstatio
 > - we use `Rocky Linux 9.4` in this example
 ## Required Knowledge
 ### Understanding Network Configuration Process
+> This diagram provides a visual representation of the network configuration process, detailing how a client PC interacts with various components such as VLAN, DNS Server, DHCP in Router, and Storage during the boot process
 ```mermaid
 sequenceDiagram
     participant PC as Client
@@ -46,7 +47,7 @@ sequenceDiagram
     Storage-->>-PC: Confirms storage
     Note over PC: PC is now fully configured and connected
 ```
-> This diagram provides a visual representation of the network configuration process, detailing how a client PC interacts with various components such as VLAN, DNS Server, DHCP in Router, and Storage during the boot process
+
 ### DHCP
 ```mermaid
 sequenceDiagram
@@ -62,6 +63,43 @@ sequenceDiagram
     DHCP_Server->>+Client: Sends DHCPACK
     Note over Client: Client configures with received IP
 ```
+### DNS
+```mermaid
+sequenceDiagram
+    participant Client as Client Device
+    participant DNS_Client as DNS Client
+    participant DNS_Server as DNS Server
+    Note over Client: Client wants to access www.example.com
+    Client->>+DNS_Client: Sends DNS query for www.example.com
+    DNS_Client->>+DNS_Server: Queries DNS Server for www.example.com
+    DNS_Server->>+DNS_Client: Returns IP address for www.example.com
+    DNS_Client->>+Client: Sends IP address for www.example.com
+    Note over Client: Client accesses www.example.com using the returned IP address
+```
+### PXE and TFTP
+> This diagram outlines the basic steps involved in the PXE and TFTP boot process:
+> - Client Starts Booting: The client device initiates the boot process.
+> - Sends DHCPDISCOVER: The client sends a DHCPDISCOVER packet to discover available DHCP servers.
+> - Receives DHCPOFFER: The DHCP server responds with a DHCPOFFER packet, providing the client with an IP address and the address of the TFTP server.
+> - Requests Boot Image: The client requests the boot image from the TFTP server.
+> - Sends Boot Image: The TFTP server sends the boot image to the client.
+> - Executes Boot Image: The client executes the boot image, initiating the boot process from the network.
+
+```mermaid
+sequenceDiagram
+    participant Client as Client Device
+    participant DHCP_Server as DHCP Server
+    participant TFTP_Server as TFTP Server
+    participant PXE_DP as PXE Distribution Point
+    Note over Client: Client starts booting
+    Client->>+DHCP_Server: Sends DHCPDISCOVER
+    DHCP_Server->>+Client: Sends DHCPOFFER with IP, TFTP Server info
+    Client->>+TFTP_Server: Requests boot image
+    TFTP_Server->>+Client: Sends boot image
+    Client->>+PXE_DP: Executes boot image
+    Note over Client: Client boots from network
+```
+
 
 ## Preperation
 
