@@ -24,6 +24,7 @@ You will be ready to discover and provision your physical servers and workstatio
 ## Required Knowledge
 ### Understanding Network Configuration Process
 > This diagram provides a visual representation of the network configuration process, detailing how a client PC interacts with various components such as VLAN, DNS Server, DHCP in Router, and Storage during the boot process
+>  - the vlan can be digital, or inside a layer 2/3 switch
 ```mermaid
 sequenceDiagram
     participant PC as Client
@@ -75,6 +76,31 @@ sequenceDiagram
     DNS_Server->>+DNS_Client: Returns IP address for www.example.com
     DNS_Client->>+Client: Sends IP address for www.example.com
     Note over Client: Client accesses www.example.com using the returned IP address
+```
+- [do routers have dns?](https://superuser.com/questions/1715361/do-routers-have-a-dns-server)
+... 
+> most SOHO routers have a built-in DNS server to act as a cache. It's not a mandatory "router" feature though – enterprise networks would run their DNS on a separate system instead.
+
+>  **If this is so, then I guess that DNS server would just be another cache similar to the one in Windows...or is it a more advanced DNS server?**
+
+> - It varies between products. Talking about SOHO routers, the router's own DNS server is pretty much always just a caching proxy and actual name resolution relies on forwarding requests to an upstream resolver; no root hints involved.
+> - But in addition to that, it is also quite common for the router to be authoritative for some "local" domain (like .lan or .home or .dlink) which contains hostnames for your LAN hosts. This integrates with the router's DHCP service, collecting hostnames that devices provide in their lease requests. It may even support static entries, though in SOHO routers it's rarely anything more than a single 'A' record per name.
+>
+...
+### Subnets
+```mermaid
+sequenceDiagram
+    participant Client as Client Device
+    participant VLAN as VLAN
+    participant DHCP_Server as DHCP Server
+    Note over Client: Client joins VLAN X
+    Client->>+VLAN: Sends VLAN membership request
+    VLAN->>+DHCP_Server: Notifies DHCP Server about new client
+    DHCP_Server->>+Client: Offers IP address from subnet Y
+    Client->>+DHCP_Server: Accepts IP address offer
+    DHCP_Server->>+Client: Assigns IP address from subnet Y
+    Note over Client: Client is now configured with IP from subnet Y
+
 ```
 ### PXE and TFTP
 > This diagram outlines the basic steps involved in the PXE and TFTP boot process:
