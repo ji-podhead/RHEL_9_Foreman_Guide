@@ -53,6 +53,18 @@ sequenceDiagram
 
 ```
 ### DNS
+```mermaid
+sequenceDiagram
+    participant Client as Client Device
+    participant DNS_Client as DNS Client
+    participant DNS_Server as DNS Server
+    Note over Client: Client wants to access www.example.com
+    Client->>+DNS_Client: Sends DNS query for www.example.com
+    DNS_Client->>+DNS_Server: Queries DNS Server for www.example.com
+    DNS_Server->>+DNS_Client: Returns IP address for www.example.com
+    DNS_Client->>+Client: Sends IP address for www.example.com
+    Note over Client: Client accesses www.example.com using the returned IP address
+```
 - [do routers have dns?](https://superuser.com/questions/1715361/do-routers-have-a-dns-server)
 ... 
 > most SOHO routers have a built-in DNS server to act as a cache. It's not a mandatory "router" feature though – enterprise networks would run their DNS on a separate system instead.
@@ -66,19 +78,7 @@ sequenceDiagram
 >  	- The nameservers defined in the subnet agreement with the host.
 >  	- The authoritative NS-records derived from the SOA (Start of Authority) of the domain name associated with the host.
 > - Therefore, knowing the domain name of the router is crucial for successful provisioning with Foreman to ensure that all DNS queries are handled correctly and no conflicts arise. This is particularly important when Foreman attempts to dynamically assign IP addresses or checks existing DNS entries to ensure that no IP addresses are duplicated.
-...
-```mermaid
-sequenceDiagram
-    participant Client as Client Device
-    participant DNS_Client as DNS Client
-    participant DNS_Server as DNS Server
-    Note over Client: Client wants to access www.example.com
-    Client->>+DNS_Client: Sends DNS query for www.example.com
-    DNS_Client->>+DNS_Server: Queries DNS Server for www.example.com
-    DNS_Server->>+DNS_Client: Returns IP address for www.example.com
-    DNS_Client->>+Client: Sends IP address for www.example.com
-    Note over Client: Client accesses www.example.com using the returned IP address
-```
+
 ### hosts file
 ```mermaid
 sequenceDiagram
