@@ -125,42 +125,6 @@ sequenceDiagram
 > - Hosts File: Provides static mappings of domain names to IP addresses on a local machine, taking precedence over DNS when resolving domain names locally.
 > - DNS Server: Acts as a global directory service, dynamically resolving domain names to IP addresses based on the current state of the internet.
 
-
-### Understanding Network Configuration Process
-> This diagram provides a visual representation of the network configuration process, detailing how a client PC interacts with various components such as VLAN, DNS Server, DHCP in Router, and Storage during the boot process
-
-```mermaid
-sequenceDiagram
-    participant Client as Client Device
-    participant PXE as PXE Server
-    participant TFTP as TFTP Server
-    participant Smart_Proxy as Smart Proxy
-    participant Foreman_Discovery_Image as Foreman Discovery Image
-    participant Foreman as Foreman Server
-    Note over Client: Client starts booting
-    Client->>+PXE: Sends PXE request
-    PXE->>+TFTP: Requests boot image
-    TFTP->>+Client: Sends boot image
-    Note over Client: Client boots from network
-    Client->>+Smart_Proxy: Sends DHCPDISCOVER
-    Smart_Proxy->>+Client: Sends DHCPOFFER with IP, TFTP Server info
-    Client->>+Foreman_Discovery_Image: Requests boot image
-    Foreman_Discovery_Image->>+Client: Sends boot image
-    Client->>+Foreman: Executes boot image
-    Note over Client: Client discovers network
-    Client->>+Foreman: Sends discovery data
-    Foreman->>+Smart_Proxy: Processes discovery data
-    Smart_Proxy->>+Foreman: Acknowledges processing
-    Note over Client: Client is now provisioned
-
-
-
-
-```
-
-
-
-
 ### PXE and TFTP
 > This diagram outlines the basic steps involved in the PXE and TFTP boot process:
 
@@ -186,7 +150,9 @@ sequenceDiagram
 > - ***Sends Boot Image:*** The TFTP server sends the boot image to the client.
 > - ***Executes Boot Image:*** The client executes the boot image, initiating the boot process from the network.
 
-## Foreman Smartproxy
+## Foreman Smartproxy  & Network Configuration Process
+> This diagram provides a visual representation of the network configuration process, detailing how a client PC interacts with various components such as VLAN, DNS Server, DHCP in Router, and Storage during the boot process
+
 ```mermaid
 sequenceDiagram
     participant Client as Client Device
