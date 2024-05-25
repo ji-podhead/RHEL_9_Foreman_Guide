@@ -22,33 +22,6 @@ You will be ready to discover and provision your physical servers and workstatio
 >       - rsync (standalone, or better: ***rsnapshot***)
 > - we use `Rocky Linux 9.4` in this example
 ## Required Knowledge
-### Understanding Network Configuration Process
-> This diagram provides a visual representation of the network configuration process, detailing how a client PC interacts with various components such as VLAN, DNS Server, DHCP in Router, and Storage during the boot process
->  - the vlan can be digital, or inside a layer 2/3 switch
-```mermaid
-sequenceDiagram
-    participant PC as Client
-    participant VLAN as VLAN
-    participant DNS as DNS Server
-    participant DHCP as DHCP in Router
-    participant Storage as Storage (PC)
-    Note over PC: Boot process begins
-    PC->>+VLAN: Sends DHCPDISCOVER
-    VLAN->>-PC: Redirects DHCPDISCOVER to DHCP
-    PC->>+DHCP: Sends DHCPREQUEST
-    DHCP->>-PC: Sends DHCPOFFER with IP, Gateway, DNS Server, and Subnet Mask
-    Note over DNS: PC stores DNS server address
-    PC->>+Storage: Stores network configuration (IP, Gateway, DNS)
-    Storage-->>-PC: Confirms storage
-    Note over VLAN: PC sends ARP queries to determine MAC addresses
-    PC->>+DNS: Sends DNS queries for domain names
-    DNS->>-PC: Sends answers with IP addresses
-    Note over Storage: PC stores host domain (if present)
-    PC->>+Storage: Stores host domain
-    Storage-->>-PC: Confirms storage
-    Note over PC: PC is now fully configured and connected
-```
-
 ### DHCP
 ```mermaid
 sequenceDiagram
@@ -64,29 +37,6 @@ sequenceDiagram
     DHCP_Server->>+Client: Sends DHCPACK
     Note over Client: Client configures with received IP
 ```
-### DNS
-```mermaid
-sequenceDiagram
-    participant Client as Client Device
-    participant DNS_Client as DNS Client
-    participant DNS_Server as DNS Server
-    Note over Client: Client wants to access www.example.com
-    Client->>+DNS_Client: Sends DNS query for www.example.com
-    DNS_Client->>+DNS_Server: Queries DNS Server for www.example.com
-    DNS_Server->>+DNS_Client: Returns IP address for www.example.com
-    DNS_Client->>+Client: Sends IP address for www.example.com
-    Note over Client: Client accesses www.example.com using the returned IP address
-```
-- [do routers have dns?](https://superuser.com/questions/1715361/do-routers-have-a-dns-server)
-... 
-> most SOHO routers have a built-in DNS server to act as a cache. It's not a mandatory "router" feature though – enterprise networks would run their DNS on a separate system instead.
-
->  **If this is so, then I guess that DNS server would just be another cache similar to the one in Windows...or is it a more advanced DNS server?**
-
-> - It varies between products. Talking about SOHO routers, the router's own DNS server is pretty much always just a caching proxy and actual name resolution relies on forwarding requests to an upstream resolver; no root hints involved.
-> - But in addition to that, it is also quite common for the router to be authoritative for some "local" domain (like .lan or .home or .dlink) which contains hostnames for your LAN hosts. This integrates with the router's DHCP service, collecting hostnames that devices provide in their lease requests. It may even support static entries, though in SOHO routers it's rarely anything more than a single 'A' record per name.
->
-...
 ### Subnets
 ```mermaid
 sequenceDiagram
@@ -102,6 +52,83 @@ sequenceDiagram
     Note over Client: Client is now configured with IP from subnet Y
 
 ```
+### DNS
+- [do routers have dns?](https://superuser.com/questions/1715361/do-routers-have-a-dns-server)
+... 
+> most SOHO routers have a built-in DNS server to act as a cache. It's not a mandatory "router" feature though – enterprise networks would run their DNS on a separate system instead.
+>  **If this is so, then I guess that DNS server would just be another cache similar to the one in Windows...or is it a more advanced DNS server?**
+> - It varies between products. Talking about SOHO routers, the router's own DNS server is pretty much always just a caching proxy and actual name resolution relies on forwarding requests to an upstream resolver; no root hints involved.
+> - But in addition to that, it is also quite common for the router to be authoritative for some "local" domain (like .lan or .home or .dlink) which contains hostnames for your LAN hosts. This integrates with the router's DHCP service, collecting hostnames that devices provide in their lease requests. It may even support static entries, though in SOHO routers it's rarely anything more than a single 'A' record per name.
+- why does foreman require dns?
+> - To provision with Foreman, the DNS domain of the router is essential because Foreman requires defined domain names for every host in the network. These domain names are crucial for managing A-, AAAA-, and PTR resource records. Even if Foreman doesn't manage your DNS servers, you still need to create at least one domain and assign it. Domains are part of the naming conventions that Foreman uses for hosts, for example, a host named test123 in the example.com domain has the fully qualified domain name test123.example.com.
+> - During the DNS record creation process, Foreman performs conflict DNS answers to ensure that the hostname is not actively being used. This check is performed against one of the following DNS servers:
+>  	- The system-wide resolver, if under Administer > Settings > Query local nameservers the option true is enabled.
+>  	- The nameservers defined in the subnet agreement with the host.
+>  	- The authoritative NS-records derived from the SOA (Start of Authority) of the domain name associated with the host.
+> - Therefore, knowing the domain name of the router is crucial for successful provisioning with Foreman to ensure that all DNS queries are handled correctly and no conflicts arise. This is particularly important when Foreman attempts to dynamically assign IP addresses or checks existing DNS entries to ensure that no IP addresses are duplicated.
+...
+```mermaid
+sequenceDiagram
+    participant Client as Client Device
+    participant DNS_Client as DNS Client
+    participant DNS_Server as DNS Server
+    Note over Client: Client wants to access www.example.com
+    Client->>+DNS_Client: Sends DNS query for www.example.com
+    DNS_Client->>+DNS_Server: Queries DNS Server for www.example.com
+    DNS_Server->>+DNS_Client: Returns IP address for www.example.com
+    DNS_Client->>+Client: Sends IP address for www.example.com
+    Note over Client: Client accesses www.example.com using the returned IP address
+```
+### hosts file
+```mermaid
+sequenceDiagram
+    participant Client as Client Device
+    participant Browser as Web Browser
+    participant Hosts_File as Hosts File
+    participant DNS_Server as DNS Server
+    Note over Client: Client wants to access www.example.com
+    Browser->>+Hosts_File: Checks for www.example.com
+    Hosts_File->>+Browser: Returns IP address if found
+    Note over Browser: Uses IP address from Hosts File
+    Browser->>+DNS_Server: Queries DNS Server for www.example.com
+    DNS_Server->>+Browser: Returns IP address for www.example.com
+    Note over Browser: Uses IP address from DNS Server
+```
+### Understanding Network Configuration Process
+> This diagram provides a visual representation of the network configuration process, detailing how a client PC interacts with various components such as VLAN, DNS Server, DHCP in Router, and Storage during the boot process
+
+```mermaid
+sequenceDiagram
+    participant PC as Client
+    participant VLAN as VLAN
+    participant ExternalDNS as External DNS Server
+    participant DNSRouter as DNS in Router
+    participant DHCP as DHCP in Router
+    participant Storage as Storage (PC)
+    participant HostsFile as Hosts File
+    Note over PC: Boot process begins
+    PC->>+VLAN: Sends DHCPDISCOVER
+    VLAN->>-PC: Redirects DHCPDISCOVER to DHCP
+    PC->>+DHCP: Sends DHCPREQUEST
+    DHCP->>-PC: Sends DHCPOFFER with IP, Gateway, DNS Server (DNSRouter), and Subnet Mask
+    Note over DNSRouter: PC configures DNS settings based on DHCP offer
+    PC->>+HostsFile: Reads Hosts File for custom mappings
+    HostsFile-->>-PC: Returns mapped IP addresses if available
+    Note over PC: PC uses DNSRouter for standard lookups within local network
+    PC->>+ExternalDNS: Sends DNS queries for domain names outside local network
+    ExternalDNS->>-PC: Sends answers with IP addresses
+    Note over PC: PC uses Hosts File for custom mappings
+    PC->>+Storage: Stores network configuration (IP, Gateway, DNS)
+    Storage-->>-PC: Confirms storage
+    Note over PC: PC is now fully configured and connected
+
+
+
+```
+
+
+
+
 ### PXE and TFTP
 > This diagram outlines the basic steps involved in the PXE and TFTP boot process:
 > - Client Starts Booting: The client device initiates the boot process.
