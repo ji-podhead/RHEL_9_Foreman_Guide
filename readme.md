@@ -37,21 +37,34 @@ sequenceDiagram
     DHCP_Server->>+Client: Sends DHCPACK
     Note over Client: Client configures with received IP
 ```
-### Subnets
+### Subnets and VLAN
 ```mermaid
 sequenceDiagram
     participant Client as Client Device
     participant VLAN as VLAN
     participant DHCP_Server as DHCP Server
+    participant DNS_Server as DNS Server
     Note over Client: Client joins VLAN X
     Client->>+VLAN: Sends VLAN membership request
-    VLAN->>+DHCP_Server: Notifies DHCP Server about new client
+    VLAN->>+DHCP_Server: Notifies DHCP Server about new client in VLAN X
     DHCP_Server->>+Client: Offers IP address from subnet Y
     Client->>+DHCP_Server: Accepts IP address offer
     DHCP_Server->>+Client: Assigns IP address from subnet Y
     Note over Client: Client is now configured with IP from subnet Y
+    Note over Client: Client uses VLAN for network traffic
+    Client->>+DNS_Server: Sends DNS query for www.example.com
+    DNS_Server->>+Client: Returns IP address for www.example.com
+    Note over Client: Client accesses www.example.com using the returned IP address
 
 ```
+> - MAAS:
+> 	- Focus: Direct management of VLANs and subnets within the platform itself.
+> 	- Functionality: Allows creation and management of multiple VLANs, supporting both tagged and untagged VLANs on managed switches. Each fabric has a default VLAN, with additional VLANs added for logical separation within the same physical infrastructure.
+> - Foreman:
+> 	- Focus: Primarily focused on provisioning hosts and configuring their network settings.
+> 	- Functionality: Can provision hosts across various subnets but does not directly manage VLANs. Requires separate network-level configuration for creating and managing VLANs.
+> In essence, MAAS offers integrated VLAN and subnet management within its environment, whereas Foreman focuses on host provisioning and network configuration, leaving VLAN management to external network administration.
+
 ### DNS
 ```mermaid
 sequenceDiagram
@@ -65,6 +78,7 @@ sequenceDiagram
     DNS_Client->>+Client: Sends IP address for www.example.com
     Note over Client: Client accesses www.example.com using the returned IP address
 ```
+
 - [do routers have dns?](https://superuser.com/questions/1715361/do-routers-have-a-dns-server)
 ... 
 > - most SOHO routers have a built-in DNS server to act as a cache. It's not a mandatory "router" feature though – enterprise networks would run their DNS on a separate system instead.
@@ -171,14 +185,8 @@ sequenceDiagram
 > - ***Sends Boot Image:*** The TFTP server sends the boot image to the client.
 > - ***Executes Boot Image:*** The client executes the boot image, initiating the boot process from the network.
 
-## VLAN
-> MAAS:
-> - Focus: Direct management of VLANs and subnets within the platform itself.
-> - Functionality: Allows creation and management of multiple VLANs, supporting both tagged and untagged VLANs on managed switches. Each fabric has a default VLAN, with additional VLANs added for logical separation within the same physical infrastructure.
-> Foreman:
-> - Focus: Primarily focused on provisioning hosts and configuring their network settings.
-> - Functionality: Can provision hosts across various subnets but does not directly manage VLANs. Requires separate network-level configuration for creating and managing VLANs.
-> In essence, MAAS offers integrated VLAN and subnet management within its environment, whereas Foreman focuses on host provisioning and network configuration, leaving VLAN management to external network administration.
+
+
 ## Preperation
 
 - make sure you have a static hostname (we will use `my_hostname`)
