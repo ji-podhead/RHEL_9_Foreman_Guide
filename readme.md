@@ -80,6 +80,9 @@ sequenceDiagram
 > - Therefore, knowing the domain name of the router is crucial for successful provisioning with Foreman to ensure that all DNS queries are handled correctly and no conflicts arise. This is particularly important when Foreman attempts to dynamically assign IP addresses or checks existing DNS entries to ensure that no IP addresses are duplicated.
 
 ### hosts file
+> This diagram outlines the differences in the process of resolving a domain name using the hosts file versus a DNS server:
+> - This sequence diagram simplifies the process for illustrative purposes. The actual process may involve additional steps, such as DNS caching and recursive queries, depending on the network infrastructure and protocols in use.
+
 ```mermaid
 sequenceDiagram
     participant Client as Client Device
@@ -94,6 +97,20 @@ sequenceDiagram
     DNS_Server->>+Browser: Returns IP address for www.example.com
     Note over Browser: Uses IP address from DNS Server
 ```
+
+> - Using the Hosts File:
+>	- The client's web browser first checks the hosts file for an entry corresponding to the domain name (www.example.com).
+> 	- If an entry is found, the browser uses the IP address listed in the hosts file to connect to the website.
+> 	- This method bypasses DNS resolution entirely, relying solely on local entries.
+> - Using a DNS Server:
+> 	- If the hosts file does not contain an entry for the domain, the browser queries a DNS server for the IP address associated with www.example.com.
+> 	- The DNS server returns the IP address, which the browser then uses to establish a connection to the website.
+> 	- This method relies on external DNS services to resolve domain names.
+> The key difference lies in the source of the IP address used for accessing the website:
+> - Hosts File: Provides static mappings of domain names to IP addresses on a local machine, taking precedence over DNS when resolving domain names locally.
+> - DNS Server: Acts as a global directory service, dynamically resolving domain names to IP addresses based on the current state of the internet.
+
+
 ### Understanding Network Configuration Process
 > This diagram provides a visual representation of the network configuration process, detailing how a client PC interacts with various components such as VLAN, DNS Server, DHCP in Router, and Storage during the boot process
 
