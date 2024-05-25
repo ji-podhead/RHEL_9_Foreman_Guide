@@ -47,6 +47,22 @@ sequenceDiagram
     Note over PC: PC is now fully configured and connected
 ```
 > This diagram provides a visual representation of the network configuration process, detailing how a client PC interacts with various components such as VLAN, DNS Server, DHCP in Router, and Storage during the boot process
+### DHCP
+```mermaid
+sequenceDiagram
+    participant Client as Client Device
+    participant DHCP_Server as DHCP Server
+    participant Router as Router
+    Note over Client: Client needs an IP address
+    Client->>+Router: Broadcasts DHCPDISCOVER
+    Router->>+DHCP_Server: Forwards DHCPDISCOVER
+    DHCP_Server->>+Client: Sends DHCPOFFER
+    Note over Client: Client selects an offer
+    Client->>+DHCP_Server: Requests DHCPREQUEST
+    DHCP_Server->>+Client: Sends DHCPACK
+    Note over Client: Client configures with received IP
+```
+
 ## Preperation
 
 - make sure you have a static hostname (we will use `my_hostname`)
