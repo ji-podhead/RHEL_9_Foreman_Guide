@@ -14,7 +14,7 @@ You will be ready to discover and provision your physical servers and workstatio
 >  -  we wont use  ***Smartproxy DNS*** since its not required if using a local DHCP 
 >-  we install Discovery Plugin before setting up TFTP because we have less work
 > - Its demanded that you install Foreman with Katello on a ***freshly provisioned machine***
-	>  	- you cannot install katello plugin if you installed foreman without it before
+>  	- you cannot install katello plugin if you installed foreman without it before
 > -  make sure that you have a ***Backup*** before using the Installer
 >    - *especially if you have set up Foreman successfully before*
 >    - you can make backup by using:
