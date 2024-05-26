@@ -1,6 +1,7 @@
 
 
 
+
 # Foreman 3.10 + Puppet + Katello + Discovery Plugin-Installation- &  PXE Beginners Guide for RHEL_9 (using local-DHCP&TFTP)
  
  In this Guide i will show you how to install Forman with puppet, katello and discovery plugin.
@@ -514,6 +515,35 @@ $ nano /usr/lib/systemd/system/tftp.service
 --foreman-proxy-tftp-managed true \
 --foreman-proxy-tftp-servername 192.168.2.100
 ```
+# Discovery
+***Change PXE global temlate***
+> set it to discovery
+![settings](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/settings.png?raw=true)
+
+***Add our subnet***
+> - i use the maximum range here, but you dont need to if you have multiple hostgroups
+>     - keep in  mind that this is limited by your dhcp-settings 
+![subnet](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/subnet.png?raw=true)
 
 
+***Build PXE default template***
+> click on *A)*
+![pxe defauflt](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/provisioning_templates.png?raw=true) 
+> - also make sure to add the proxy to your subnet:
+> ![subnet_proxy](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/subnet_proxy.png?raw=true)
+>
+***Boot a machine via PXE***
+> i was to lazy to setup kvm and libvirt so i used my server here
+> if everything works, you dont need to do anything: just let it run
+![pxe_boot](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/first%20discovery.jpg?raw=true)
 
+- if your subnet and settings are correct it should boot:
+> ![pxe_boot](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/discovery_boot_process.jpg?raw=true)
+> - the Boot Image will configure NIC manually:
+> ![auto_discovery](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/discovery_auto_setup.jpg?raw=true) 
+> 
+> - the host gets discovered:
+> ![discovery_finish](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/discovery_finish.jpg?raw=true)
+> 
+> - our discovered Host is ready to get provisioned:
+> ![discovered_host](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/discovered_host.jpg?raw=true)
