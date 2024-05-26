@@ -489,7 +489,16 @@ $ nano /usr/lib/systemd/system/tftp.service
 >```Bash
 > # systemctl enable tftp
 >```
-
+- you can check the realtime-logs like this:
+```Bash
+# journalctl -u tftp -f
+```
+>```
+> Mai 24 19:26:15 <user> in.tftpd[26138]: Client ::ffff:192.168.2.104 finished boot/rocky-linux-imLv796i67R9-initrd.img
+> Mai 24 19:41:00 <user> systemd[1]: tftp.service: Deactivated successfully.
+> Mai 26 10:16:08 <user> systemd[1]: Started Tftp Server.
+> Mai 26 10:16:08 <user> in.tftpd[147746]: Client ::ffff:192.168.2.104 finished pxelinux.0
+>```
 ## Update Foreman
 - we set managed dns to false: `--foreman-proxy-dns-managed false \`
 ```Bash
