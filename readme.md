@@ -6,8 +6,6 @@
 
 I decided to group the tutorials, rather than creating a huuuuge file.
  
- [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/libvirt)
-
 ## 1. [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide)
 > - here we explain:
 >	-  how tftp and dhcp works 
