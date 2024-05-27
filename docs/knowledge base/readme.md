@@ -63,7 +63,7 @@
 > This diagram provides a visual representation of the network configuration process, detailing how a client PC interacts with various components such as VLAN, DNS Server, DHCP in Router, and Storage during the boot process
 ![smartproxy](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/smartproxy.png?raw=true)
 
-#
+# NIC
 **[A network interface controller](https://en.wikipedia.org/wiki/Network_interface_controller) (NIC, also known as a network interface card,[3] network adapter, LAN adapter and physical network interface[4]) is a computer hardware component that connects a computer to a computer network.**
 
 # Network Bridge
