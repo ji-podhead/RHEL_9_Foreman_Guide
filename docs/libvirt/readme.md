@@ -25,7 +25,12 @@ $su root
 # chmod 700 /usr/share/foreman/.ssh
 # chown foreman:foreman /usr/share/foreman/.ssh
 ```
-
+-  (not sure if that was required) 
+>```Bash		
+> # chmod 700 -R /usr/share/foreman/.cache 
+> # chown foreman:foreman /usr/share/foreman/.cache
+> ```
+***install libvirt:***
 ```Bash
 # dnf install qemu-kvm libvirt virt-install virt-viewer
 ```
@@ -88,11 +93,7 @@ virt-manager
 >```Bash
 > # chown foreman:foreman /usr/share/foreman/.cache/libvirt/virsh
 >```
-> -  (not sure if that was required) 
->```Bash		
-> # chmod 700 -R /usr/share/foreman/.cache 
-> # chown foreman:foreman /usr/share/foreman/.cache
-> ```
+
 ***edit `/etc/ssh/sshd_config`:***
 >```
 >...
