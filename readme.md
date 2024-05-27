@@ -6,6 +6,7 @@
 > - I will also show you how to setup Foreman and how to use the Foreman Boot Image via PXE.
 > - You will be ready to discover and provision your physical servers and workstations after following this Guide.
 
+
  
 ## 1. [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge%20base)
 
@@ -32,6 +33,12 @@
 >  - we setup proxmox as a compute resource
 >  - we boot intoo container/vm
 
+# Roadmap
+- libvirt
+- proxmox
+- lifecycle management with puppet and katello
+- cicd with ansible, terraform and packer
+- salt and k8s
 ---
 ***the original version of the guide can be found here:*** [original](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/original)
 > - I decided to group the tutorials, rather than creating a huuuuge file.
