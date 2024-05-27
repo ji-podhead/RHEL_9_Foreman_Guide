@@ -6,21 +6,26 @@
 
 I decided to group the tutorials, rather than creating a huuuuge file.
 
-## [Knowledge Base]()
+## 1. [Knowledge Base]()
 > - here we explain:
 >	-  how tftp and dhcp works 
 > 	-  how the pxe boot process works
 >	-  how the foreman smartproxy works   
 
-## [Install Foreman (with katello, discovery-plugin, and local dhcp/tftp)]()
+## 2. [Install Foreman (with katello, discovery-plugin, and local dhcp/tftp)]()
 > - just the installation process
 
-## [Discovery and Provisioning]()
-> - we Discovery our Host using the Boot Image
+## 3. [Discovery and Provisioning]()
+> - we discover our host using the Boot Image
 > - we set up Hostgroups, subnets, etc
 > - we finally provision our discovered host
 
-## [install and setup libvirt in Foreman]()
+## 4. [install and setup libvirt in Foreman]()
 > - we install libvirt
 > - we setup libvirt as compute resource
-> - boot intoo container 
+> - boot intoo container/vm
+
+## 5. Proxmox
+>  - we install proxmox via libvirt using foreman
+>  - we setup proxmox as a compute resource
+>  - we boot intoo container/vm
