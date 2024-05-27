@@ -48,6 +48,20 @@ virt-manager
 > - However, if you have specific networking needs that require custom configurations beyond what virbr0 offers, such as bonding, VLAN tagging, or other advanced features, you might choose to manually create and configure a network bridge yourself.
 
 ---
+## config
+
+
+
+
+**add a host mapping**
+> - edit the `/etc/hosts` file and add a mapping for our libvirt service
+>```Bash
+>... 
+>192.168.2.100 cc.speedport.ip     # NIC`s main Ip used for this mapping - remember we had range of 100 
+>1192.168.122.1 kvm.mapping.com   # mapping for the virtual NIC we just created called vibr0
+>```
+
+
 ## Creating and Configuring a Network Bridge on Linux Using nmcli ***(OPTIONAL)***
 
 
@@ -79,17 +93,6 @@ bash sudo nmcli conn modify br0 ipv4.addresses "192.168.200.100/24" ipv4.method 
 
 > - This configuration enables virtual machines running over the bridge `br0` to communicate directly with the physical network, as if they were directly connected to the network via the physical network interface `enp2s0`. This setup is particularly useful for creating an isolated environment for virtual machines while still providing access to the physical network.
 
-
-
----
-
-**add a host mapping**
-> - edit the `/etc/hosts` file and add a mapping for our libvirt service
->```Bash
->... 
->192.168.2.100 cc.speedport.ip     # NIC`s main Ip used for this mapping - remember we had range of 100 
->1192.168.122.1 kvm.mapping.com   # mapping for the virtual NIC we just created called vibr0
->```
 
 
 
