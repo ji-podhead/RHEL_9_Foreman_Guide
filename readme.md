@@ -32,6 +32,6 @@
 
 ---
 ***the original version of the guide can be found here:*** [original](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/original)
-I decided to group the tutorials, rather than creating a huuuuge file.
+> - I decided to group the tutorials, rather than creating a huuuuge file.
 
 ---
