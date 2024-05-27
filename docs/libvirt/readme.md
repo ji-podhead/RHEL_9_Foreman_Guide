@@ -1,3 +1,4 @@
+
 **| [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge%20base)|[Install](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp)) | [Discovery and Provisioning](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning) | [libvirt](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/libvirt) | [proxmox](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/proxmox) |** 
 
 ---
@@ -22,6 +23,11 @@ for drv in qemu network nodedev nwfilter secret storage interface; do systemctl 
 ```
 > -  *If all virt-host-validate checks return a PASS value, your system is prepared for creating VMs.*
 >    - **see the red hat guide [Chapter 2. Enabling virtualization](https://access.redhat.com/documentation/de-de/red_hat_enterprise_linux/9/html/configuring_and_managing_virtualization/assembly_enabling-virtualization-in-rhel-9_configuring-and-managing-virtualization)** for troubleshooting**
+- ***enable and start libvirt:***
+ ```Bash
+sudo systemctl start libvirtd
+```
+ 
 - ***install virtmanager:***
 ```Bash
 virt-manager
@@ -50,17 +56,70 @@ virt-manager
 ---
 ## config
 
-
-
-
-**add a host mapping**
+***add a host mapping***
 > - edit the `/etc/hosts` file and add a mapping for our libvirt service
->```Bash
->... 
->192.168.2.100 cc.speedport.ip     # NIC`s main Ip used for this mapping - remember we had range of 100 
->1192.168.122.1 kvm.mapping.com   # mapping for the virtual NIC we just created called vibr0
+>    >```Bash
+>	  >... 
+>   >192.168.2.100 cc.speedport.ip     # NIC`s main Ip used for this mapping - remember we had range of 100 
+>   >1192.168.122.1 kvm.mapping.com   # mapping for the virtual NIC we just created called vibr0
+>    >```
+
+***login to foreman:***
+```Bash
+# su foreman -s /bin/bash
+```
+***add ssh key:***
+```Bash
+bash-5.1$ ssh-keygen
+```
+***copy the key:***
+```Bash
+bash-5.1$ ssh-copy-id root@kvm.mapping.com
+```
+>```
+>  ...
+>  root@kvm.mapping.com's password: 
+>  Number of key(s) added: 1
+>  Now try logging into the machine, with:   "ssh 'root@kvm.mapping.com'"
+>  and check to make sure that only the key(s) you wanted were added.
 >```
 
+***exit the shell:***
+```Bash
+bash-5.1$ exit
+```
+***try the ssh connection:***
+```Bash
+# ssh 'root@kvm.mapping.com'
+```
+***create virsh folder***
+
+```Bash
+ # mkdir /usr/share/foreman/.cache
+ # mkdir /usr/share/foreman/.cache/libvirt
+ # mkdir /usr/share/foreman/.cache/libvirt/virsh
+```
+> -  ****the user needs to be foreman:****
+>```Bash
+> # chown foreman:foreman /usr/share/foreman/.cache/libvirt/virsh
+>```
+***change to foreman-user again***
+```Bash
+# su foreman -s /bin/bash 
+```
+***connect to the kvm-hypervisor:***
+```Bash
+bash-5.1$ virsh -c qemu+ssh://root@kvm.mapping.com/system
+```
+>```
+>Willkommen bei virsh, dem interaktiven Virtualisierungsterminal.
+>
+>Tippen Sie:  'help' für eine Hilfe zu den Befehlen
+>      'quit' zum Beenden
+>
+>virsh # 
+>```
+---
 
 ## Creating and Configuring a Network Bridge on Linux Using nmcli ***(OPTIONAL)***
 
