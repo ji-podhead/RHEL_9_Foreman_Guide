@@ -1,70 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-   <head>
-	 <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/8.0.0/mermaid.min.js"></script>
-    </head>
-	 
-<body>
- <pre><code class="language-mermaid">graph LR
-A--&gt;B
-</code></pre>
 
-<div class="mermaid">graph LR
-A--&gt;B
-</div>
-	
-</body>
-<script>
-var config = {
-    startOnLoad:true,
-    theme: 'forest',
-    flowchart:{
-            useMaxWidth:false,
-            htmlLabels:true
-        }
-};
-mermaid.initialize(config);
-window.mermaid.init(undefined, document.querySelectorAll('.language-mermaid'));
-</script>
-
-</html>
 
 - this might be a little redundant at the moment, but i thought its better to explain everything step after step, so the diagramms wont get to large
 ### DHCP
-```mermaid
-sequenceDiagram
-    participant Client as Client Device
-    participant DHCP_Server as DHCP Server
-    participant Router as Router
-    Note over Client: Client needs an IP address
-    Client->>+Router: Broadcasts DHCPDISCOVER
-    Router->>+DHCP_Server: Forwards DHCPDISCOVER
-    DHCP_Server->>+Client: Sends DHCPOFFER
-    Note over Client: Client selects an offer
-    Client->>+DHCP_Server: Requests DHCPREQUEST
-    DHCP_Server->>+Client: Sends DHCPACK
-    Note over Client: Client configures with received IP
-```
-### Subnets and VLAN
-```mermaid
-sequenceDiagram
-    participant Client as Client Device
-    participant VLAN as VLAN
-    participant DHCP_Server as DHCP Server
-    participant DNS_Server as DNS Server
-    Note over Client: Client joins VLAN X
-    Client->>+VLAN: Sends VLAN membership request
-    VLAN->>+DHCP_Server: Notifies DHCP Server about new client in VLAN X
-    DHCP_Server->>+Client: Offers IP address from subnet Y
-    Client->>+DHCP_Server: Accepts IP address offer
-    DHCP_Server->>+Client: Assigns IP address from subnet Y
-    Note over Client: Client is now configured with IP from subnet Y
-    Note over Client: Client uses VLAN for network traffic
-    Client->>+DNS_Server: Sends DNS query for www.example.com
-    DNS_Server->>+Client: Returns IP address for www.example.com
-    Note over Client: Client accesses www.example.com using the returned IP address
+![dhcp](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/dhcp.png?raw=true)
 
-```
+### Subnets and VLAN
+![subnets&vlan](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/subnets%20und%20vlan.png?raw=true)
 > - MAAS:
 > 	- Focus: Direct management of VLANs and subnets within the platform itself.
 > 	- Functionality: Allows creation and management of multiple VLANs, supporting both tagged and untagged VLANs on managed switches. Each fabric has a default VLAN, with additional VLANs added for logical separation within the same physical infrastructure.
@@ -74,18 +15,7 @@ sequenceDiagram
 > In essence, MAAS offers integrated VLAN and subnet management within its environment, whereas Foreman focuses on host provisioning and network configuration, leaving VLAN management to external network administration.
 
 ### DNS
-```mermaid
-sequenceDiagram
-    participant Client as Client Device
-    participant DNS_Client as DNS Client
-    participant DNS_Server as DNS Server
-    Note over Client: Client wants to access www.example.com
-    Client->>+DNS_Client: Sends DNS query for www.example.com
-    DNS_Client->>+DNS_Server: Queries DNS Server for www.example.com
-    DNS_Server->>+DNS_Client: Returns IP address for www.example.com
-    DNS_Client->>+Client: Sends IP address for www.example.com
-    Note over Client: Client accesses www.example.com using the returned IP address
-```
+![dns](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/dns.png?raw=true)
 
 - [do routers have dns?](https://superuser.com/questions/1715361/do-routers-have-a-dns-server)
 ... 
@@ -104,21 +34,7 @@ sequenceDiagram
 ### hosts file
 > This diagram outlines the differences in the process of resolving a domain name using the hosts file versus a DNS server:
 > - This sequence diagram simplifies the process for illustrative purposes. The actual process may involve additional steps, such as DNS caching and recursive queries, depending on the network infrastructure and protocols in use.
-
-```mermaid
-sequenceDiagram
-    participant Client as Client Device
-    participant Browser as Web Browser
-    participant Hosts_File as Hosts File
-    participant DNS_Server as DNS Server
-    Note over Client: Client wants to access www.example.com
-    Browser->>+Hosts_File: Checks for www.example.com
-    Hosts_File->>+Browser: Returns IP address if found
-    Note over Browser: Uses IP address from Hosts File
-    Browser->>+DNS_Server: Queries DNS Server for www.example.com
-    DNS_Server->>+Browser: Returns IP address for www.example.com
-    Note over Browser: Uses IP address from DNS Server
-```
+![host_file](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/hosts_file.png?raw=true)
 
 > - Using the Hosts File:
 >	- The client's web browser first checks the hosts file for an entry corresponding to the domain name (www.example.com).
@@ -134,22 +50,7 @@ sequenceDiagram
 
 ### PXE and TFTP
 > This diagram outlines the basic steps involved in the PXE and TFTP boot process:
-
-
-```mermaid
-sequenceDiagram
-    participant Client as Client Device
-    participant DHCP_Server as DHCP Server
-    participant TFTP_Server as TFTP Server
-    participant PXE_DP as PXE Distribution Point
-    Note over Client: Client starts booting
-    Client->>+DHCP_Server: Sends DHCPDISCOVER
-    DHCP_Server->>+Client: Sends DHCPOFFER with IP, TFTP Server info
-    Client->>+TFTP_Server: Requests boot image
-    TFTP_Server->>+Client: Sends boot image
-    Client->>+PXE_DP: Executes boot image
-    Note over Client: Client boots from network
-```
+![pxe](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/PXE_and_TFTP.png?raw=true)
 > - ***Client Starts Booting:*** The client device initiates the boot process.
 > - ***Sends DHCPDISCOVER:*** The client sends a DHCPDISCOVER packet to discover available DHCP servers.
 > - ***Receives DHCPOFFER:*** The DHCP server responds with a DHCPOFFER packet, providing the client with an IP address and the address of the TFTP server.
@@ -159,36 +60,5 @@ sequenceDiagram
 
 ## Foreman Smartproxy  & Network Configuration Process
 > This diagram provides a visual representation of the network configuration process, detailing how a client PC interacts with various components such as VLAN, DNS Server, DHCP in Router, and Storage during the boot process
+![smartproxy](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/smartproxy.png?raw=true)
 
-```mermaid
-sequenceDiagram
-    participant Client as Client Device
-    participant PXE as PXE (Preboot Execution Environment)
-    participant DHCP_Server as DHCP Server
-    participant DNS_Server as DNS Server
-    participant Foreman as Foreman
-    participant SmartProxy as SmartProxy
-    participant TFTP_Server as TFTP Server
-    participant HTTP_Server as HTTP Server
-    Note over Client: Client starts boot process
-    Client->>+PXE: Initiates PXE Boot
-    PXE->>+DHCP_Server: Sends DHCPDISCOVER
-    DHCP_Server->>+PXE: Sends DHCPOFFER with IP Address
-    PXE->>+Client: Sends IP Address
-    Note over Client: Client receives IP Address
-    Client->>+DNS_Server: Sends DNS query for Foreman Domain
-    DNS_Server->>+Client: Sends IP Address for Foreman Domain
-    Note over Client: Client configures DNS settings
-    Client->>+SmartProxy: Sends PXE Boot Request
-    SmartProxy->>+Foreman: Sends request for Host Provisioning
-    Foreman->>+HTTP_Server: Sends request for Host Template
-    HTTP_Server->>+Foreman: Sends Host Template
-    Foreman->>+SmartProxy: Sends response with Host Information
-    SmartProxy->>+Client: Sends Boot Image via TFTP
-    Client->>+TFTP_Server: Sends request for Boot Image
-    TFTP_Server->>+Client: Sends Boot Image
-    Note over Client: Client boots from network
-
-```
-
- ***you made it trough the tutorial!!!***
