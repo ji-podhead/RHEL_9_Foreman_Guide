@@ -5,8 +5,10 @@
 > You will be ready to discover and provision your physical servers and workstations after following this Guide.
 
 I decided to group the tutorials, rather than creating a huuuuge file.
+ 
+ [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/Knowledge Base)
 
-## 1. [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/Knowledge Base)
+## 1. [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/Knowledge-Base)
 > - here we explain:
 >	-  how tftp and dhcp works 
 > 	-  how the pxe boot process works
