@@ -4,6 +4,12 @@
 ---
 
 # libvirt
+> - we gonna use root for KVM here,otherwise we need a kvm-user like this:
+>  >```Bash
+>  ># usermod -a -G libvirt _non_root_user_
+>  >``` 
+>   > -  instead we will use this user: `root@kvm.mapping.com`, disable root-ssh login and login via local root password
+
 ## install
 
 ```Bash
@@ -28,7 +34,7 @@ for drv in qemu network nodedev nwfilter secret storage interface; do systemctl 
 sudo systemctl start libvirtd
 ```
  
-- ***install virtmanager:***
+- ***install virtmanager: *(optional)****
 ```Bash
 virt-manager
 ```
@@ -63,6 +69,37 @@ virt-manager
 >   >192.168.2.100 cc.speedport.ip     # NIC`s main Ip used for this mapping - remember we had range of 100 
 >   >1192.168.122.1 kvm.mapping.com   # mapping for the virtual NIC we just created called vibr0
 >    >```
+***create folders needed for libvirt and the ssh keys***
+```Bash
+# mkdir /usr/share/foreman/.cache
+# mkdir /usr/share/foreman/.cache/libvirt
+# mkdir /usr/share/foreman/.cache/libvirt/virsh
+
+# mkdir /usr/share/foreman/.ssh
+# chmod 700 /usr/share/foreman/.ssh
+# chown foreman:foreman /usr/share/foreman/.ssh
+
+# (not sure if that was required)
+# chmod 700 -R /usr/share/foreman/.cache 
+# chown foreman:foreman /usr/share/foreman/.cache
+```
+
+> -  ****the user needs to be foreman:****
+>```Bash
+> # chown foreman:foreman /usr/share/foreman/.cache/libvirt/virsh
+>```
+***edit `/etc/ssh/sshd_config`:***
+>```
+>...
+>Include /etc/ssh/sshd_config.d/*.conf
+>PermitRootLogin yes
+>```
+> **the tricky part here is:**
+> - we permit root login via ssh, but `we use the root user for KVM`
+> 
+- dont forget to restart sshd! 
+
+
 
 ***login to foreman:***
 ```Bash
@@ -72,42 +109,22 @@ virt-manager
 ```Bash
 bash-5.1$ ssh-keygen
 ```
-***copy the key:***
+***copy the key `(thats where we need root)`:***
 ```Bash
 bash-5.1$ ssh-copy-id root@kvm.mapping.com
 ```
 >```
 >  ...
->  root@kvm.mapping.com's password: 
+>  root@kvm.mapping.com's password:  <<------- ROOT
 >  Number of key(s) added: 1
 >  Now try logging into the machine, with:   "ssh 'root@kvm.mapping.com'"
 >  and check to make sure that only the key(s) you wanted were added.
 >```
-
-***exit the shell:***
-```Bash
-bash-5.1$ exit
-```
 ***try the ssh connection:***
 ```Bash
-# ssh 'root@kvm.mapping.com'
+ bash-5.1$ 'root@kvm.mapping.com'
 ```
-***create virsh folder***
-
-```Bash
- # mkdir /usr/share/foreman/.cache
- # mkdir /usr/share/foreman/.cache/libvirt
- # mkdir /usr/share/foreman/.cache/libvirt/virsh
-```
-> -  ****the user needs to be foreman:****
->```Bash
-> # chown foreman:foreman /usr/share/foreman/.cache/libvirt/virsh
->```
-***change to foreman-user again***
-```Bash
-# su foreman -s /bin/bash 
-```
-***connect to the kvm-hypervisor:***
+***test the kvm-hypervisor connection:***
 ```Bash
 bash-5.1$ virsh -c qemu+ssh://root@kvm.mapping.com/system
 ```
@@ -119,6 +136,28 @@ bash-5.1$ virsh -c qemu+ssh://root@kvm.mapping.com/system
 >
 >virsh # 
 >```
+***exit the shell:***
+```Bash
+bash-5.1$ exit
+```
+
+
+
+***try to add the libvirt compute resource in foreman:***
+> - open the dashboard, and try to add a computeresource like this:
+> ![adding_computeresource](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/add_libvirt_computeresource.png?raw=true) 
+> -	I had to restart my computer at this point because the libvirtd-admin.socket service stopped
+>   > - you can check that by using systemctl:
+>   >```Bash
+>   >     # systemctl status libvirtd
+>   >     ● libvirtd.service - libvirt legacy monolithic daemon
+>   >     Loaded: loaded (/usr/lib/systemd/system/libvirtd.service; disabled; preset>
+>   >     Active: active (running) since Mon 2024-05-27 16:21:53 CEST; 1s ago
+>   >    TriggeredBy: 					● libvirtd-admin.socket
+>   > 	                  		        ● libvirtd-ro.socket
+>   >	         						● libvirtd.socket
+>   >```
+
 ---
 
 ## Creating and Configuring a Network Bridge on Linux Using nmcli ***(OPTIONAL)***
