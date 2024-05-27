@@ -84,11 +84,11 @@ virt-manager
 
 ***add a host mapping***
 > - edit the `/etc/hosts` file and add a mapping for our libvirt service
->   >```Bash
->	  >... 
->   > 192.168.2.100 cc.speedport.ip     # NIC`s main Ip used for this mapping - remember we had range of 100 
->   > 1192.168.122.1 kvm.mapping.com   # mapping for the virtual NIC we just created called vibr0
->   >```
+>   ```Bash
+>	  ... 
+>    192.168.2.100 cc.speedport.ip     # NIC`s main Ip used for this mapping - remember we had range of 100 
+>    1192.168.122.1 kvm.mapping.com   # mapping for the virtual NIC we just created called vibr0
+>   ```
 > -  ****the user needs to be foreman:****
 >```Bash
 > # chown foreman:foreman /usr/share/foreman/.cache/libvirt/virsh
@@ -104,8 +104,8 @@ virt-manager
 > - we permit root login via ssh, but `we use the root user for KVM`
 > - i think the reason why `PermitRootLogin yes` doesnt work is either the kvm-user, or the foreman user
 > - both users dont have a pass, nor are there in the sudoers file
->   > - but anway blocking root ssl login is best practise, but i still dont know the true cause
->   > - so we just accept this for now and be happy that it works
+>    - but anway blocking root ssl login is best practise, but i still dont know the true cause
+>    - so we just accept this for now and be happy that it works
 - **dont forget to restart sshd!** 
 
 
