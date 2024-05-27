@@ -8,13 +8,24 @@
 >  >```Bash
 >  ># usermod -a -G libvirt _non_root_user_
 >  >``` 
->   > -  instead we will use this user: `root@kvm.mapping.com`, disable root-ssh login and login via local root password later on
+>  -  instead we will use this user: `root@kvm.mapping.com`, disable root-ssh login and login via local root password later on
 
 ## install
 
 ```Bash
 $su root
 ```
+
+***create the folders needed for libvirt and the ssh keys***
+```Bash
+# mkdir /usr/share/foreman/.cache
+# mkdir /usr/share/foreman/.cache/libvirt
+# mkdir /usr/share/foreman/.cache/libvirt/virsh
+# mkdir /usr/share/foreman/.ssh
+# chmod 700 /usr/share/foreman/.ssh
+# chown foreman:foreman /usr/share/foreman/.ssh
+```
+
 ```Bash
 # dnf install qemu-kvm libvirt virt-install virt-viewer
 ```
@@ -28,11 +39,12 @@ for drv in qemu network nodedev nwfilter secret storage interface; do systemctl 
 # virt-host-validate
 ```
 > -  *If all virt-host-validate checks return a PASS value, your system is prepared for creating VMs.*
->    - **see the red hat guide [Chapter 2. Enabling virtualization](https://access.redhat.com/documentation/de-de/red_hat_enterprise_linux/9/html/configuring_and_managing_virtualization/assembly_enabling-virtualization-in-rhel-9_configuring-and-managing-virtualization)** for troubleshooting**
+>    - **see the red hat guide [Chapter 2. Enabling virtualization](https://access.redhat.com/documentation/de-de/red_hat_enterprise_linux/9/html/configuring_and_managing_virtualization/assembly_enabling-virtualization-in-rhel-9_configuring-and-managing-virtualization) for troubleshooting**
 - ***enable and start libvirt:***
  ```Bash
 sudo systemctl start libvirtd
 ```
+
  
 - ***install virtmanager: *(optional)****
 ```Bash
@@ -60,27 +72,18 @@ virt-manager
 > - In many setups, especially those involving libvirt and virtualization management tools like Foreman, a default bridge (virbr0) is often automatically created and managed by these systems. The virbr0 bridge is typically configured to allow VMs managed by libvirt to communicate with external networks, acting as a gateway for them.
 > - However, if you have specific networking needs that require custom configurations beyond what virbr0 offers, such as bonding, VLAN tagging, or other advanced features, you might choose to manually create and configure a network bridge yourself.
 
+
 ---
 ## config
 
+
 ***add a host mapping***
 > - edit the `/etc/hosts` file and add a mapping for our libvirt service
->    >```Bash
+>   >```Bash
 >	  >... 
->   >192.168.2.100 cc.speedport.ip     # NIC`s main Ip used for this mapping - remember we had range of 100 
->   >1192.168.122.1 kvm.mapping.com   # mapping for the virtual NIC we just created called vibr0
->    >```
-***create the folders needed for libvirt and the ssh keys***
-```Bash
-# mkdir /usr/share/foreman/.cache
-# mkdir /usr/share/foreman/.cache/libvirt
-# mkdir /usr/share/foreman/.cache/libvirt/virsh
-# mkdir /usr/share/foreman/.ssh
-# chmod 700 /usr/share/foreman/.ssh
-# chown foreman:foreman /usr/share/foreman/.ssh
-```
-
-
+>   > 192.168.2.100 cc.speedport.ip     # NIC`s main Ip used for this mapping - remember we had range of 100 
+>   > 1192.168.122.1 kvm.mapping.com   # mapping for the virtual NIC we just created called vibr0
+>   >```
 > -  ****the user needs to be foreman:****
 >```Bash
 > # chown foreman:foreman /usr/share/foreman/.cache/libvirt/virsh
@@ -98,10 +101,11 @@ virt-manager
 >```
 > **the tricky part here is:**
 > - we permit root login via ssh, but `we use the root user for KVM`
-> - i think the reason why this dont work is either the kvm-user, or the foreman user
+> - i think the reason why `PermitRootLogin yes` doesnt work is either the kvm-user, or the foreman user
 > - both users dont have a pass, nor are there in the sudoers file
->   > - but I dont know the true reason this dont work, but anway blocking root ssl login is best practise, so we just accept this for now and be happy that it works
-- dont forget to restart sshd! 
+>   > - but anway blocking root ssl login is best practise, but i still dont know the true cause
+>   > - so we just accept this for now and be happy that it works
+- **dont forget to restart sshd!** 
 
 
 
@@ -158,9 +162,10 @@ bash-5.1$ exit
 >   >     ● libvirtd.service - libvirt legacy monolithic daemon
 >   >     Loaded: loaded (/usr/lib/systemd/system/libvirtd.service; disabled; preset>
 >   >     Active: active (running) since Mon 2024-05-27 16:21:53 CEST; 1s ago
->   >     TriggeredBy:		 			● libvirtd-admin.socket
->   > 	                  		        ● libvirtd-ro.socket
->   >	         						● libvirtd.socket
+>   >     TriggeredBy:
+>   >       ● libvirtd-admin.socket
+>   >       ● libvirtd-ro.socket
+>   >	      ● libvirtd.socket
 >   >```
 
 
