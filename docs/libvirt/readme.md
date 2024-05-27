@@ -122,6 +122,7 @@ bash-5.1$ ssh-keygen
 ```Bash
 bash-5.1$ ssh-copy-id root@kvm.mapping.com
 ```
+
 >```
 >  ...
 >  root@kvm.mapping.com's password:  <<------- ROOT
@@ -129,22 +130,23 @@ bash-5.1$ ssh-copy-id root@kvm.mapping.com
 >  Now try logging into the machine, with:   "ssh 'root@kvm.mapping.com'"
 >  and check to make sure that only the key(s) you wanted were added.
 >```
+
 ***try the ssh connection:***
 ```Bash
  bash-5.1$ 'root@kvm.mapping.com'
 ```
+
 ***test the kvm-hypervisor connection:***
 ```Bash
 bash-5.1$ virsh -c qemu+ssh://root@kvm.mapping.com/system
 ```
 >```
->Willkommen bei virsh, dem interaktiven Virtualisierungsterminal.
->
->Tippen Sie:  'help' für eine Hilfe zu den Befehlen
+> Willkommen bei virsh, dem interaktiven Virtualisierungsterminal.
+> Tippen Sie:  'help' für eine Hilfe zu den Befehlen
 >      'quit' zum Beenden
->
->virsh # 
+> virsh # 
 >```
+
 ***exit the shell:***
 ```Bash
 bash-5.1$ exit
