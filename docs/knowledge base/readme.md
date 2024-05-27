@@ -63,6 +63,9 @@
 > This diagram provides a visual representation of the network configuration process, detailing how a client PC interacts with various components such as VLAN, DNS Server, DHCP in Router, and Storage during the boot process
 ![smartproxy](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/smartproxy.png?raw=true)
 
+# Network Bridge
+**A [network bridge](https://de.wikipedia.org/wiki/Bridge_(Netzwerk)) is a computer networking device that creates a single, aggregate network from multiple communication networks or network segments. This function is called network bridging** 
+
 # Lifecycle Management
 
 >Lifecycle management refers to the process of overseeing the entire lifespan of a product, from its inception through various stages of development, deployment, operation, and ultimately to its retirement or disposal. This comprehensive approach ensures that every aspect of the product's journey is managed effectively, optimizing the development process, enhancing product quality, reducing time-to-market, and increasing profitability.
