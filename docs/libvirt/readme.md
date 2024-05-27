@@ -13,29 +13,37 @@
 ## install
 
 ```Bash
-$su root
+$ su root
 ```
 
 ***create the folders needed for libvirt and the ssh keys***
+
 ```Bash
-# mkdir /usr/share/foreman/.cache
-# mkdir /usr/share/foreman/.cache/libvirt
-# mkdir /usr/share/foreman/.cache/libvirt/virsh
 # mkdir /usr/share/foreman/.ssh
-# chmod 700 /usr/share/foreman/.ssh
-# chown foreman:foreman /usr/share/foreman/.ssh
 ```
--  (not sure if that was required) 
->```Bash		
+> -  ***the user needs to be foreman and it should be fully writable:***
+>```Bash
+># chmod 700 /usr/share/foreman/.ssh
+># chown foreman:foreman /usr/share/foreman/.ssh
+>```
+
+-  (not sure if that was required)
+
+> ```Bash
+> # mkdir /usr/share/foreman/.cache
+> # mkdir /usr/share/foreman/.cache/libvirt
+> # mkdir /usr/share/foreman/.cache/libvirt/virsh
+> # chown foreman:foreman /usr/share/foreman/.cache/libvirt/virsh
 > # chmod 700 -R /usr/share/foreman/.cache 
 > # chown foreman:foreman /usr/share/foreman/.cache
 > ```
+
 ***install libvirt:***
 ```Bash
 # dnf install qemu-kvm libvirt virt-install virt-viewer
 ```
 ```Bash
-for drv in qemu network nodedev nwfilter secret storage interface; do systemctl start virt${drv}d{,-ro,-admin}.socket; done
+# for drv in qemu network nodedev nwfilter secret storage interface; do systemctl start virt${drv}d{,-ro,-admin}.socket; done
 ```
 
 
@@ -47,13 +55,13 @@ for drv in qemu network nodedev nwfilter secret storage interface; do systemctl 
 >    - **see the red hat guide [Chapter 2. Enabling virtualization](https://access.redhat.com/documentation/de-de/red_hat_enterprise_linux/9/html/configuring_and_managing_virtualization/assembly_enabling-virtualization-in-rhel-9_configuring-and-managing-virtualization) for troubleshooting**
 - ***enable and start libvirt:***
  ```Bash
-sudo systemctl start libvirtd
+# systemctl start libvirtd
 ```
 
  
 - ***install virtmanager: *(optional)****
 ```Bash
-virt-manager
+# virt-manager
 ```
 
 **check if the Virtual Bridge 0" interface  was created**
@@ -89,10 +97,7 @@ virt-manager
 >    192.168.2.100 cc.speedport.ip     # NIC`s main Ip used for this mapping - remember we had range of 100 
 >    1192.168.122.1 kvm.mapping.com   # mapping for the virtual NIC we just created called vibr0
 >   ```
-> -  ****the user needs to be foreman:****
->```Bash
-> # chown foreman:foreman /usr/share/foreman/.cache/libvirt/virsh
->```
+
 
 ***edit `/etc/ssh/sshd_config`:***
 >```
