@@ -43,13 +43,13 @@ virt-manager
 >```
 - [what is virbr0?](https://askubuntu.com/questions/246343/what-is-the-virbr0-interface-used-for)
 > - *The virbr0, or "Virtual Bridge 0" interface is used for NAT (Network Address Translation). It is provided by the libvirt library, and virtual environments sometimes use it to connect to the outside network.*
-
+> - whether you need to create a network bridge with virbr0 depends on your specific networking requirements and how you intend to manage network connections for your virtual machines (VMs).
+> - In many setups, especially those involving libvirt and virtualization management tools like Foreman, a default bridge (virbr0) is often automatically created and managed by these systems. The virbr0 bridge is typically configured to allow VMs managed by libvirt to communicate with external networks, acting as a gateway for them.
+> - However, if you have specific networking needs that require custom configurations beyond what virbr0 offers, such as bonding, VLAN tagging, or other advanced features, you might choose to manually create and configure a network bridge yourself.
 
 ---
 ## Creating and Configuring a Network Bridge on Linux Using nmcli ***(OPTIONAL)***
-- whether you need to create a network bridge with virbr0 depends on your specific networking requirements and how you intend to manage network connections for your virtual machines (VMs).
-- In many setups, especially those involving libvirt and virtualization management tools like Foreman, a default bridge (virbr0) is often automatically created and managed by these systems. The virbr0 bridge is typically configured to allow VMs managed by libvirt to communicate with external networks, acting as a gateway for them.
-- However, if you have specific networking needs that require custom configurations beyond what virbr0 offers, such as bonding, VLAN tagging, or other advanced features, you might choose to manually create and configure a network bridge yourself, similar to the process you described earlier with nmcli. In such cases, naming the bridge something other than virbr0 could be beneficial for clarity and organization, especially if you're managing multiple bridges for different purposes
+
 
 > The commands you executed are part of the process to create and configure a network bridge on a Linux system. This setup allows virtual machines (VMs) to communicate directly with the physical network, as if they were directly connected to the network via a physical network interface. Here's a comprehensive guide translated into English and formatted in Markdown:
 
