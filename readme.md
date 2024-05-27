@@ -32,7 +32,7 @@
 >  - we install proxmox via libvirt using foreman
 >  - we setup proxmox as a compute resource
 >  - we boot intoo container/vm
-
+---
 # Roadmap
 - libvirt
 - proxmox
