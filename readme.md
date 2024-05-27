@@ -21,7 +21,7 @@ I decided to group the tutorials, rather than creating a huuuuge file.
 > - we set up Hostgroups, subnets, etc
 > - we finally provision our discovered host
 
-## 4. [install and setup libvirt in Foreman]()
+## 4. [install and setup libvirt in Foreman](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/libvirt)
 > - we install libvirt
 > - we setup libvirt as compute resource
 > - boot intoo container/vm
