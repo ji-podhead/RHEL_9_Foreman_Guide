@@ -12,8 +12,11 @@
 
 > - here we explain:
 >	-  how tftp and dhcp works 
-> 	-  how the pxe boot process works
->	-  how the foreman smartproxy works   
+> -  how the pxe boot process works
+>	-  how the foreman smartproxy works
+> -  Lifecycle Management
+>    - what is it?
+>    - puppet & katello roles     
 
 ## 2. [Install Foreman (with katello, discovery-plugin, and local dhcp/tftp)](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp))
 > - just the installation process
