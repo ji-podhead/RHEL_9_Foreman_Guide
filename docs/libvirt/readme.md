@@ -53,7 +53,8 @@ $ su root
 ```
 > -  *If all virt-host-validate checks return a PASS value, your system is prepared for creating VMs.*
 >    - **see the red hat guide [Chapter 2. Enabling virtualization](https://access.redhat.com/documentation/de-de/red_hat_enterprise_linux/9/html/configuring_and_managing_virtualization/assembly_enabling-virtualization-in-rhel-9_configuring-and-managing-virtualization) for troubleshooting**
-- ***enable and start libvirt:***
+
+***enable and start libvirt:***
  ```Bash
 # systemctl start libvirtd
 ```
