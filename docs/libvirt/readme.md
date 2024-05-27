@@ -8,7 +8,7 @@
 >  >```Bash
 >  ># usermod -a -G libvirt _non_root_user_
 >  >``` 
->   > -  instead we will use this user: `root@kvm.mapping.com`, disable root-ssh login and login via local root password
+>   > -  instead we will use this user: `root@kvm.mapping.com`, disable root-ssh login and login via local root password later on
 
 ## install
 
@@ -53,6 +53,7 @@ virt-manager
 >        inet 192.168.122.1  netmask 255.255.255.0  broadcast 192.168.122.255
 >...
 >```
+> - the ip of the Interface we are looking for: `192.168.122.1`
 - [what is virbr0?](https://askubuntu.com/questions/246343/what-is-the-virbr0-interface-used-for)
 > - *The virbr0, or "Virtual Bridge 0" interface is used for NAT (Network Address Translation). It is provided by the libvirt library, and virtual environments sometimes use it to connect to the outside network.*
 > - whether you need to create a network bridge with virbr0 depends on your specific networking requirements and how you intend to manage network connections for your virtual machines (VMs).
@@ -69,25 +70,26 @@ virt-manager
 >   >192.168.2.100 cc.speedport.ip     # NIC`s main Ip used for this mapping - remember we had range of 100 
 >   >1192.168.122.1 kvm.mapping.com   # mapping for the virtual NIC we just created called vibr0
 >    >```
-***create folders needed for libvirt and the ssh keys***
+***create the folders needed for libvirt and the ssh keys***
 ```Bash
 # mkdir /usr/share/foreman/.cache
 # mkdir /usr/share/foreman/.cache/libvirt
 # mkdir /usr/share/foreman/.cache/libvirt/virsh
-
 # mkdir /usr/share/foreman/.ssh
 # chmod 700 /usr/share/foreman/.ssh
 # chown foreman:foreman /usr/share/foreman/.ssh
-
-# (not sure if that was required)
-# chmod 700 -R /usr/share/foreman/.cache 
-# chown foreman:foreman /usr/share/foreman/.cache
 ```
+
 
 > -  ****the user needs to be foreman:****
 >```Bash
 > # chown foreman:foreman /usr/share/foreman/.cache/libvirt/virsh
 >```
+> -  (not sure if that was required) 
+>```Bash		
+> # chmod 700 -R /usr/share/foreman/.cache 
+> # chown foreman:foreman /usr/share/foreman/.cache
+> ```
 ***edit `/etc/ssh/sshd_config`:***
 >```
 >...
@@ -96,7 +98,9 @@ virt-manager
 >```
 > **the tricky part here is:**
 > - we permit root login via ssh, but `we use the root user for KVM`
-> 
+> - i think the reason why this dont work is either the kvm-user, or the foreman user
+> - both users dont have a pass, nor are there in the sudoers file
+>   > - but I dont know the true reason this dont work, but anway blocking root ssl login is best practise, so we just accept this for now and be happy that it works
 - dont forget to restart sshd! 
 
 
@@ -146,19 +150,22 @@ bash-5.1$ exit
 ***try to add the libvirt compute resource in foreman:***
 > - open the dashboard, and try to add a computeresource like this:
 > ![adding_computeresource](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/add_libvirt_computeresource.png?raw=true) 
-> -	I had to restart my computer at this point because the libvirtd-admin.socket service stopped
+> -	I had to restart my computer at before that because the libvirtd-admin.socket service stopped
 >   > - you can check that by using systemctl:
 >   >```Bash
 >   >     # systemctl status libvirtd
+>   >```
 >   >     ● libvirtd.service - libvirt legacy monolithic daemon
 >   >     Loaded: loaded (/usr/lib/systemd/system/libvirtd.service; disabled; preset>
 >   >     Active: active (running) since Mon 2024-05-27 16:21:53 CEST; 1s ago
->   >    TriggeredBy: 					● libvirtd-admin.socket
+>   >     TriggeredBy:		 			● libvirtd-admin.socket
 >   > 	                  		        ● libvirtd-ro.socket
 >   >	         						● libvirtd.socket
 >   >```
 
+
 ---
+
 
 ## Creating and Configuring a Network Bridge on Linux Using nmcli ***(OPTIONAL)***
 
