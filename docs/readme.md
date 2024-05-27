@@ -1,4 +1,3 @@
-# RHEL9 Foreman Guide
 > In this Guide i will show you how to install Forman with puppet, katello and discovery plugin.
 > You will also learn how to install and setup DHCP- and TFTP-Server.
 > I will also show you how to setup Foreman and how to use the Foreman Boot Image via PXE.
@@ -9,9 +8,12 @@ I decided to group the tutorials, rather than creating a huuuuge file.
 ## 1. [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge%20base)
 
 > - here we explain:
->	-  how tftp and dhcp works 
-> 	-  how the pxe boot process works
->	-  how the foreman smartproxy works   
+>	  -  how tftp and dhcp works 
+>   -  how the pxe boot process works
+>	  -  how the foreman smartproxy works
+>   -  Lifecycle Management
+>      - what is it?
+>      - puppet & katello roles
 
 ## 2. [Install Foreman (with katello, discovery-plugin, and local dhcp/tftp)](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp))
 > - just the installation process
