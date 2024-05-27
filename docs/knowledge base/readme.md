@@ -66,11 +66,11 @@
 # Lifecycle Management
 
 >Lifecycle management refers to the process of overseeing the entire lifespan of a product, from its inception through various stages of development, deployment, operation, and ultimately to its retirement or disposal. This comprehensive approach ensures that every aspect of the product's journey is managed effectively, optimizing the development process, enhancing product quality, reducing time-to-market, and increasing profitability.
-
+>
 > In the context of IT systems, lifecycle management encompasses the administration of a system from provisioning, through operations, to retirement. It allows for the reliable creation of systems in an automated and scalable manner, tracking and accounting for all systems, assets, and subscriptions, ensuring consistency across the system's lifecycle, and decommissioning systems and resources when they are no longer needed.
-
+>
 > Application lifecycle management (ALM) specifically addresses the management of applications throughout their lifecycle, from requirements gathering through development, testing, deployment, and maintenance. ALM is crucial for ensuring quality and traceability in the application development process, facilitating efficient and effective management of application lifecycles.
-
+>
 > Overall, lifecycle management is essential for improving product quality, accelerating time-to-market, ensuring compliance in regulated industries, and providing visibility into the development process. Whether dealing with physical products, software applications, or IT systems, lifecycle management plays a vital role in guiding business decisions and strategies from conception to retirement.
 ```
 +--------+   +--------------+   +---------------+   +------------+   +-----------+   +-------------+   +---------------------+   +------------+   +-----------+     
@@ -82,21 +82,26 @@
     
 
 > This flowchart starts with the initiation of the lifecycle management process and progresses through the following stages:
->    - Provisioning: Setting up the necessary resources and environments for the system or application.
->    - Configuration: Configuring the system or application according to specifications.
->    - Deployment: Deploying the system or application into the production environment.
->    - Operation: Running the system or application in the operational environment.
->    - Maintenance: Performing regular checks and updates to ensure the system or application remains functional and secure.
->    - Maintenance Updates: Applying updates and patches during the maintenance phase.
->    - Retirement: Decommissioning the system or application once it is no longer needed.
->    - End: Completion of the lifecycle management process.
+>    - ***Provisioning:*** Setting up the necessary resources and environments for the system or application.
+>    - ***Configuration:*** Configuring the system or application according to specifications.
+>    - ***Deployment:*** Deploying the system or application into the production environment.
+>    - ***Operation:*** Running the system or application in the operational environment.
+>    - ***Maintenance:*** Performing regular checks and updates to ensure the system or application remains functional and secure.
+>    - ***Maintenance Updates:*** Applying updates and patches during the maintenance phase.
+>    - ***Retirement:*** Decommissioning the system or application once it is no longer needed.
+>    - ***End:*** Completion of the lifecycle management process. -> `END OF LIFE`
 
-
+---
 > Both Puppet and Katello are used for lifecycle management, but their roles and areas of application differ.
 
 ***Puppet*** is traditionally used for host configuration management. It allows administrators to define and manage the configuration of computers using a simple declarative language syntax. With Puppet, you can automate and manage software configuration, filesystems, packages, services, and much more on your hosts. However, support for Puppet in the context of Red Hat Satellite (now part of Red Hat Smart Management) has been discontinued with the introduction of Satellite 7.0. Users who previously used Puppet within Satellite have two options: either migrate to Ansible or integrate Puppet outside of the Satellite environment .
 
 ***Katello***, part of Red Hat Satellite, offers features for content lifecycle management, including package sources, repository management, and lifecycle management. With Katello, you can manage the content needed for your infrastructure and distribute this content to your hosts. The use of the Katello Agent enabled communication between clients and the Satellite server to initiate tasks such as performing package updates or installations on the clients. However, with the introduction of remote execution functionality in Satellite 6.2, there was the possibility to use SSH for communication, reducing the need for the Katello Agent. Transitioning to a "goferless" configuration (without the Katello Agent) is recommended in future versions of Satellite .
+
+---
+
+
+
 
 ---
 **| [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge%20base)|[Install](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp)) | [Discovery and Provisioning](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning) | [libvirt](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/libvirt) | [proxmox](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/proxmox) |** 
