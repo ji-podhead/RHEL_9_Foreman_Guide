@@ -72,7 +72,7 @@
 > Application lifecycle management (ALM) specifically addresses the management of applications throughout their lifecycle, from requirements gathering through development, testing, deployment, and maintenance. ALM is crucial for ensuring quality and traceability in the application development process, facilitating efficient and effective management of application lifecycles.
 >
 > Overall, lifecycle management is essential for improving product quality, accelerating time-to-market, ensuring compliance in regulated industries, and providing visibility into the development process. Whether dealing with physical products, software applications, or IT systems, lifecycle management plays a vital role in guiding business decisions and strategies from conception to retirement.
-```
+```Bash
 +--------+   +--------------+   +---------------+   +------------+   +-----------+   +-------------+   +---------------------+   +------------+   +-----------+     
 | Start  |-->| Provisioning |-->| Configuration |-->| Deployment |-->| Operation |-->| Maintenance |-->| Maintenance Updates |-->| Retirement |-->|   End     |
 +--------+   +--------------+   +---------------+   +------------+   +-----------+   +-------------+   +---------------------+   +------------+   +-----------+
