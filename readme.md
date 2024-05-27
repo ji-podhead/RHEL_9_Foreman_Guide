@@ -6,7 +6,8 @@
 
 I decided to group the tutorials, rather than creating a huuuuge file.
  
-## 1. [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge base)
+## 1. [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge%20base)
+
 > - here we explain:
 >	-  how tftp and dhcp works 
 > 	-  how the pxe boot process works
