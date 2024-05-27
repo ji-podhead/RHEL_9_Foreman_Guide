@@ -162,6 +162,7 @@ bash-5.1$ exit
 >   >```Bash
 >   >     # systemctl status libvirtd
 >   >```
+>   >```
 >   >     ● libvirtd.service - libvirt legacy monolithic daemon
 >   >     Loaded: loaded (/usr/lib/systemd/system/libvirtd.service; disabled; preset>
 >   >     Active: active (running) since Mon 2024-05-27 16:21:53 CEST; 1s ago
