@@ -13,10 +13,10 @@ I decided to group the tutorials, rather than creating a huuuuge file.
 > 	-  how the pxe boot process works
 >	-  how the foreman smartproxy works   
 
-## 2. [Install Foreman (with katello, discovery-plugin, and local dhcp/tftp)]()
+## 2. [Install Foreman (with katello, discovery-plugin, and local dhcp/tftp)](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation(katello,discovery,dhcp,tftp))
 > - just the installation process
 
-## 3. [Discovery and Provisioning]()
+## 3. [Discovery and Provisioning](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning)
 > - we discover our host using the Boot Image
 > - we set up Hostgroups, subnets, etc
 > - we finally provision our discovered host
