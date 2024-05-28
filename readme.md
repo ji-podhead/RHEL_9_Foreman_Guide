@@ -39,6 +39,7 @@
 # Roadmap
 - libvirt
 - proxmox
+- diskless boot using zfs (incl. repo storage) and custom pxe/grub preset
 - lifecycle management with puppet and katello
 - cicd with ansible, terraform and packer
 - salt and k8s
