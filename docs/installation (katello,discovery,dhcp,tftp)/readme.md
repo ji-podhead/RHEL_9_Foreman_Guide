@@ -271,10 +271,12 @@ The full log is at /var/log/foreman-installer/katello.log
 >```
 > default menu.c32
 > timeout 300
-> label ForemanBootImage
->  menu label ^Foreman Boot Image
-> kernel /path/to/your/boot/image/vmlinuz
-> append initrd=/path/to/your/boot/image/initrd.img root=/dev/nfs nfsroot=:192.168.0.1:/var> > /lib/tftboot/boot ip=dhcp
+> #LABEL discovery
+>   MENU LABEL Foreman Discovery Image
+>   KERNEL boot/fdi-image/vmlinuz0
+>  APPEND initrd=boot/fdi-image/initrd0.img rootflags=loop root=live:/fdi.iso rootfstype=auto proxy.url=https://cc.speedport.ip proxy.type=foreman
+
+  IPAPPEND 2
 > ```
 
 ```Bash
