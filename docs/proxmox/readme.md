@@ -15,8 +15,11 @@
 > ![create_proxmox_vm](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/libvirt_create_proxmox_vm.png?raw=true)
 > ![promox_install](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/libvirt_initial_proxmox_boot.png?raw=true)
 > ![proxmox_finish](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/libvirt_proxmox_complete.png?raw=true)
+
 > login via your local browser using "root" along with the password you set in installation-process
+
 ---
+
 ***add a host-mapping:***
 > - edit /etc/hosts and add a mapping for the proxmox ip, so we can create a self-signed sll cert
 > ```
@@ -53,6 +56,7 @@
 ```Bash
 # openssl req -new -key private_key.pem -out csr.pe
 ```
+
 >```
 >You are about to be asked to enter information that will be incorporated 
 > into your certificate request.
@@ -78,39 +82,48 @@
 ```Bash
  # openssl x509 -req -days 365 -in csr.pem -signkey private_key.pem -out certificate.pem
 ```
+
 >```
 >Certificate request self-signature ok
 >...
 >```
 >
+
 ***check out the files:***
+
 ```Bash 
 # ls
 ```
 >```
- > certificate.pem  csr.pem   encrypted_private_key.pem  private_key.pem 
+ > certificate.pem  csr.pem   encrypted_private_key.pem  private_key.pem ...
  >```
  
  ***upload your cert + encrypted privatekey to proxmox:***
  ![upload_ssl](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/proxmox_upload_custom_certificat.png?raw=true)
+ 
  - restart proxmox (should happen by default) 
 
 ## configure foreman
 
 ***configure firewall:***
+
 ```Bash
 # firewall-cmd --add-port=5900-5930/tcp
 # firewall-cmd --add-port=5900-5930/tcp --permanent
 ```
+
 ***install [foreman_fog_proxmox](https://github.com/theforeman/foreman_fog_proxmox):***
+
 ```Bash
 # sudo dnf install rubygem-foreman_fog_proxmox
 ```
 
 ***restart foreman service:***
+
 ```Bash
 # sudo systemctl restart foreman.service
 ```
+
 > - if you get error in foreman-ui after that try this:
 > ```Bash
 > # foreman-rake db:migrate
@@ -118,10 +131,13 @@
 >```
 
 ***add the proxmox-computeresource:***
+
 - apperently theres seems to be a bug in foreman_fog_proxmox, so we cant use user-token authentication:
 ![usertoken_bug](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/proxmox_compute_resource_version.png?raw=true)
+
 -  but at least we dont get the previously mentioned error because of missing ssl cert
 - so we switch to access ticket, fill in our proxmox user (needs to be priviliged), as well as our proxmox pasword and finish the compute resource setup:
+
 ![finish_compute_resource](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/proxmox_compute_resource_finish.png?raw=true)
 
 ---
