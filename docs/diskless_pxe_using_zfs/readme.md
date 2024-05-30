@@ -64,21 +64,7 @@
 >#
 >/proxmox.local:/tank/nfs_shared_folder *(rw,sync,no_subtree_check)
 >```
-***edit the fstab:***
-```Bash
-# nano /etc/fstab
-```
->```
->...
->proc /proc proc defaults 0 0
->
->proxmox.local:/tank/diskstorage /mnt/shared_folder_on_nfs nfs auto 0 0
->```
-***update Grub:***
-```Bash
-#sudo apt-get install --reinstall dracut
-#dracut -f
-```
+
 ***edit the wm-config:***
 - this needs to be done in the machine that runs libvirt not inside proxmox
 ```Bash
@@ -95,11 +81,26 @@
 >      <address type='drive' controller='0' bus='0' target='0' unit='2'/>
 >      </disk>
 >```
-
+## on the client side
+***edit the fstab for pemanent mount:***
+```Bash
+# nano /etc/fstab
+```
+>```
+>...
+>proc /proc proc defaults 0 0
+>
+>proxmox.local:/tank/diskstorage /mnt/shared_folder_on_nfs nfs auto 0 0
+>```
+***update Grub:***
+```Bash
+#sudo apt-get install --reinstall dracut
+#dracut -f
+```
 
 ***we can mount the zfs tank thats is shared via nfs like this:***
 ```
-# mount -t nfs 192.168.122.166:/<mountpoint> /mnt/shared_folder_on_nfs
+# mount -t nfs 192.168.122.166:/mnt/shared_folder_on_nfs <mountpoint> 
 ```
 ---
 
