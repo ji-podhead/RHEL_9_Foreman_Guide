@@ -8,9 +8,18 @@
 # diskless pxe-booting using zfs
 
 
+
 ***UNDER CONSTRUCTION!***
+
+***nice yt-video that explains the zfs tank:***
+
+[![Thumbnail des Videos](https://img.youtube.com/vi/oSD-VoloQag/0.jpg)](https://www.youtube.com/watch?v=oSD-VoloQag&t=651s)
+
+
 ## proxmox ZFS tank
-***add the disk’s wee need for the tank to our wm***
+
+
+***add the disk’s that we need for the tank to our wm***
 ![add_disk](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/zfs1_kvm_add_disk.png?raw=true)
 ***create zfs called tank***
 ![create_tank](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/zfs2_creating_zfs.png?raw=true)
