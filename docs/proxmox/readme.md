@@ -3,7 +3,10 @@
 
 ---
 
-# proxmox & zfs
+# proxmox 
+- in this section we will install proxmox in a wm
+- we will create a self-signed ssl-cert and create the proxmox-computeresource inside foreman
+
 ## install
 > - download the iso
 > - create a new vm
@@ -14,6 +17,82 @@
 > ![proxmox_finish](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/libvirt_proxmox_complete.png?raw=true)
 > login via your local browser using "root" along with the password you set in installation-process
 ---
+***add a host-mapping:***
+> - edit /etc/hosts and add a mapping for the proxmox ip, so we can create a self-signed sll cert
+> ```
+> ...
+> 192.168.122.1 kvm.mapping.com
+> 192.168.122.166 my.proxmox-server.de
+>```
+
+## create a self-signed ssl-cert
+ - we need this to configure proxmox-computeresource in foreman
+> - otherwise foreman will give this **error:** ` 
+>```
+> ERF42-5577 [Foreman::Exception]: Failed to create Proxmox compute resource: 
+> SSL_read:  unexpected eof while reading (OpenSSL::SSL::SSLError). 
+> Either provided credentials or FQDN is wrong or your server cannot connect to Proxmox due to network issues.
+>```
+  - of course you can use letsencrypt with certmanager/trafik or buy a cert
+ -  but thats to much for this tutorial,
+ -  so we will just use **openssl** to create the cert with a few lines of code
+ 
+***create a private key:***
+```Bash
+# openssl genpkey -algorithm RSA -out private_key.pem
+```
+***encrypt your private key:***
+```Bash
+# openssl rsa -in private_key.pem -out encrypted_private_key.pem
+```
+>```
+> writing RSA key
+>```
+
+***create a csr:***
+```Bash
+# openssl req -new -key private_key.pem -out csr.pe
+```
+>```
+>You are about to be asked to enter information that will be incorporated 
+> into your certificate request.
+> What you are about to enter is what is called a Distinguished Name or a DN.
+> There are quite a few fields but you can leave some blank
+> For some fields there will be a default value,
+> If you enter '.', the field will be left blank.
+> -----
+> Country Name (2 letter code) [XX]:de
+> State or Province Name (full name) []:
+> Locality Name (eg, city) [Default City]:
+> Organization Name (eg, company) [Default Company Ltd]:
+> Organizational Unit Name (eg, section) []:
+> Common Name (eg, your name or your server's hostname) []:my.proxmox-server.de 
+> Email Address []:<YOUR EMAIL!!!!>
+> Please enter the following 'extra' attributes
+> to be sent with your certificate request
+> A challenge password []:<YOUR CHALLENGE-PASS!!!>
+> An optional company name []:
+>```
+
+***create the self-signed cert using the just created csr:***
+```Bash
+ # openssl x509 -req -days 365 -in csr.pem -signkey private_key.pem -out certificate.pem
+```
+>```
+>Certificate request self-signature ok
+>...
+>```
+***check out the files:***
+```Bash 
+# ls
+```
+>```
+ > certificate.pem  csr.pem   encrypted_private_key.pem  private_key.pem 
+ >```
+ ***upload your cert + encrypted privatekey to proxmox:***
+ ![upload_ssl](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/proxmox_upload_custom_certificat.png?raw=true)
+ - restart proxmox (should happen by default) 
+
 ## configure foreman
 ***configure firewall:***
 ```Bash
@@ -34,90 +113,17 @@
 > # foreman-rake db:migrate
 > # systemctl restart foreman.service 
 >```
+***add the proxmox-computeresource:***
+- apperently theres seems to be a bug in foreman_fog_proxmox, so we cant use user-token authentication:
+![usertoken_bug](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/proxmox_compute_resource_version.png?raw=true)
+-  but at least we dont get the previously mentioned error because of missing ssl cert
+- so we switch to access ticket, fill in our proxmox user (needs to be priviliged), as well as our proxmox pasword and finish the compute resource setup:
+![finish_compute_resource](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/proxmox_compute_resource_finish.png?raw=true)
 
-
-## proxmox ZFS tank
-***add the disk’s wee need for the tank to our wm***
-![add_disk](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/zfs1_kvm_add_disk.png?raw=true)
-***create zfs called tank***
-![create_tank](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/zfs2_creating_zfs.png?raw=true)
-***create datasets for our zfs tank in proxmox shell:***
-```Bash
-# zfs create tank/backups
-# zfs create tank/isos
-# zfs create tank/diskstorage
-```
-***check it out:***
-```Bash
-# zfs list
-# zpool list
-```
-***
-***create the zfs storage directories***
-![create_storage](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/zfs3_create_storage.png?raw=true)***upload a iso (optional)***
-![upload_iso](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/zfs4_upload_iso.png?raw=true)***move the wm storage to zfs (optional):***
-![move_storage](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/zfs5_move_wm_storage.png?raw=true)***create a backup for our wm using our zfs_back storage directory(optional)***
-![backup](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/zfs6_wm_backup.png?raw=true)
-## nfs
-***in proxmox shell:***
-```
-# apt install nfs-common
-# apt install nfs-kernel-server
-# mkdir -p /mnt/shared_folder_on_nfs
-# chmod -R 777 /tank/diskstorage
-# chown -R nobody:nogroup /tank/diskstorage
-```
-***create zfs shared folder:***
-```Bash
-# zfs create tank/nfs_shared_folder
-# zfs set sharenfs=on tank/nfs_shared_folder
-```
-***edit the exports file:***
-```Bash
-# nano /etc/exports
-```
->```
->...
-># /srv/nfs4/homes  gss/krb5i(rw,sync,no_subtree_check)
->#
->/proxmox.local:/tank/nfs_shared_folder *(rw,sync,no_subtree_check)
->```
-***edit the fstab:***
-```Bash
-# nano /etc/fstab
-```
->```
->...
->proc /proc proc defaults 0 0
->
->proxmox.local:/tank/diskstorage /mnt/shared_folder_on_nfs nfs auto 0 0
->```
-***update Grub:***
-```Bash
-#sudo apt-get install --reinstall dracut
-#dracut -f
-```
-***edit the wm-config:***
-- this needs to be done in the machine that runs libvirt not inside proxmox
-```Bash
-# virsh edit <your_proxmox_wm>
-```
-
-> - add `<shareable/>` to the disk we added to create the zfs tank
-> ```
->      <disk type='block' device='disk'>
->      <driver name='qemu' type='raw' cache='none' io='native' discard='unmap'/>
->      <source dev='/dev/sdc'/>
->      <target dev='sdc' bus='sata'/>
->      <shareable/>
->      <address type='drive' controller='0' bus='0' target='0' unit='2'/>
->      </disk>
->```
-
-
-***we can mount the zfs tank thats is shared via nfs like this:***
-```
-# mount -t nfs 192.168.122.166:/<mountpoint> /mnt/shared_folder_on_nfs
-```
 ---
 **| [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge%20base)|[Install](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp)) | [Discovery and Provisioning](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning) | [libvirt](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/libvirt) | [proxmox](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/proxmox) |** 
+
+
+
+
+
