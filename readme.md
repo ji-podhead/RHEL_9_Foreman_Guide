@@ -16,7 +16,7 @@
 >	  -  how the foreman smartproxy works
 >   -  Lifecycle Management
 >      - what is it?
->      - puppet & katello roles     
+>      - puppet & katello roles
 
 ## 2. [Install Foreman (with katello, discovery-plugin, and local dhcp/tftp)](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp))
 > - just the installation process
@@ -31,10 +31,15 @@
 > - we setup libvirt as compute resource
 > - boot intoo container/vm
 
-## 5. Proxmox
->  - we install proxmox via libvirt using foreman
+## 5. [Proxmox](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/proxmox)
+>  - we install proxmox inside a vm using kvm&libvirt 
 >  - we setup proxmox as a compute resource
->  - we boot intoo container/vm
+
+## 6. [diskless pxe-boot using zfs](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/diskless_pxe_using_zfs) *(under construction)*
+> - we create a zfs tank inside proxmox
+> - we create a wm inside proxmox and move the storage to our zfs tank *(optional)*
+> - we create a automatic backup-plan for the wm *(optional)*
+> - we create a pxe template inside foreman to pxe-boot diskless using the zfs tank storage 
 ---
 # Roadmap
 - libvirt
