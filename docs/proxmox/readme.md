@@ -82,6 +82,7 @@
 >Certificate request self-signature ok
 >...
 >```
+>
 ***check out the files:***
 ```Bash 
 # ls
@@ -89,11 +90,13 @@
 >```
  > certificate.pem  csr.pem   encrypted_private_key.pem  private_key.pem 
  >```
+ 
  ***upload your cert + encrypted privatekey to proxmox:***
  ![upload_ssl](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/proxmox_upload_custom_certificat.png?raw=true)
  - restart proxmox (should happen by default) 
 
 ## configure foreman
+
 ***configure firewall:***
 ```Bash
 # firewall-cmd --add-port=5900-5930/tcp
@@ -113,6 +116,7 @@
 > # foreman-rake db:migrate
 > # systemctl restart foreman.service 
 >```
+
 ***add the proxmox-computeresource:***
 - apperently theres seems to be a bug in foreman_fog_proxmox, so we cant use user-token authentication:
 ![usertoken_bug](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/proxmox_compute_resource_version.png?raw=true)
