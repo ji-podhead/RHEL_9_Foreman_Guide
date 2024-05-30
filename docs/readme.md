@@ -32,7 +32,7 @@ I decided to group the tutorials, rather than creating a huuuuge file.
 >  - we install proxmox inside a vm using kvm&libvirt 
 >  - we setup proxmox as a compute resource
 
-## [diskless pxe-boot using zfs](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/diskless_pxe_using_zfs) *(under construction)*
+## 6. [diskless pxe-boot using zfs](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/diskless_pxe_using_zfs) *(under construction)*
 > - we create a zfs tank inside proxmox
 > - we create a wm inside proxmox and move the storage to our zfs tank *(optional)*
 > - we create a automatic backup-plan for the wm *(optional)*
