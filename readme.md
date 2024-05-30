@@ -42,12 +42,12 @@
 > - we create a pxe template inside foreman to pxe-boot diskless using the zfs tank storage 
 ---
 # Roadmap
-- libvirt
-- proxmox
-- diskless boot using zfs (incl. repo storage) and custom pxe/grub preset
+- ~~libvirt~~ ✓
+- ~~proxmox~~ ✓
+- ~~diskless boot using zfs (incl. repo storage) and custom pxe/grub preset~~ ✓
 - lifecycle management with puppet and katello
 - cicd with ansible, terraform and packer
-- salt and k8s
+- salt, k8s and kubevirt
 ---
 ***the original version of the guide can be found here:*** [original](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/original)
 > - I decided to group the tutorials, rather than creating a huuuuge file.
