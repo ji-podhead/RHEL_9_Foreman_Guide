@@ -53,11 +53,14 @@
 
 
 ---
+
 ### Setup a test machine for pxe boot
 
 - make sure to add your NIC to Boot-Options
 
-![pxe-test-machine](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/foreman_nestedVM_pxeboot.png?raw=true)
+  <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/foreman_nestedVM_pxeboot.png?raw=true" align="center" height="200" />
+  
+
 ---
 
 ###  DHCP & DNS installation & configuration steps
