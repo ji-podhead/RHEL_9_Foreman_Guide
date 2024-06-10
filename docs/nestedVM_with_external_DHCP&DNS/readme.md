@@ -275,9 +275,10 @@ subnet 192.168.122.0 netmask 255.255.255.0 {
 
 ########################################################################
 #		THIS WILL BE REQUIRED BY FOREMAN LATER
-#			- we choose DUFFIE HILBERT encryption here
-#			- i coulndt get dnssec to generate encryption keys
-#			- instead i used TSIG and checked help for available algos
+########################################################################
+#	- we choose DUFFIE HILBERT encryption here
+#	- i coulndt get dnssec to generate encryption keys
+#	- instead i used TSIG and checked help for available algos
 ########################################################################
 omapi-port 7911;
 key omapi_key {
