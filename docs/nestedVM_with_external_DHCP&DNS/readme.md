@@ -21,6 +21,14 @@
                     <th colspan="2" style="background-color: #f0f0f0; text-align: center;">Specs used in this Guide</th>
                 </tr>
                 <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Foreman-Machine-OS</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Rocky Linux 9.4</td>
+                        <tr>
+		    <tr>
+		   <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">DHCP & DNS-Machine-OS</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Debian 12</td>
+                        <tr>
                     <td style="padding: 8px; border: 1px solid #ddd;">Host</td>
                     <td style="padding: 8px; border: 1px solid #ddd;">192.168.122.1</td>
                         <tr>
@@ -56,14 +64,7 @@
 </table>
 
 
----
 
-### Setup a test machine for pxe boot
-
-- make sure to add your NIC to Boot-Options
-
-  <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/foreman_nestedVM_pxeboot.png?raw=true" align="center" height="200" />
-  
 
 ---
 
@@ -75,11 +76,11 @@
 - setup your Debian-based `Bind9 DNS` and `ISC-DHCP`
 	- I coulnd get my DHCP on my Foreman Machine to work with the provided Proxmox-NIC
 - **Foreman wont register your machines, even if they have a valid tftp connection, unless you share the leases of DHCP!** 
-> you will get this error: 
->    > ```
->    > Started POST /api/v2/discovered_hosts/facts
->    > Finished POST /api/v2/discovered_hosts/facts with 404 (1.07 ms) 
->    >```
+> otherwise you will get this error: 
+>```json
+>Started POST /api/v2/discovered_hosts/facts
+>Finished POST /api/v2/discovered_hosts/facts with 404 (1.07 ms) 
+>```
 - Therefor these procedures have to get accomplished:
 	- 1.  [Configuring an external DHCP server to use with Foreman server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#configuring-an-external-dhcp-server_foreman)
     
@@ -89,7 +90,7 @@
 
 ---
 
- ***Please proceed with the DNS section of my [DNS-Network Guide](https://ji-podhead.github.io/Network-Guides/DNS/install/):***
+ ***Please proceed with the DNS section of my [DNS-Network Guide](https://ji-podhead.github.io/Network-Guides/DNS/install/) if needed:***
  - All DNS-related topics needed are explained in detail here
 > - [Knowledge Base ](https://ji-podhead.github.io/Network-Guides/DNS/Knowledge%20Base)
 > - [Install & Config](https://ji-podhead.github.io/Network-Guides/DNS/install)
@@ -101,9 +102,27 @@
 ---
 
 
+### Setup a test machine for pxe boot
+
+- make sure to add your NIC to Boot-Options
+
+  <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/foreman_nestedVM_pxeboot.png?raw=true" align="center" height="200" />
+
+  ---
+
 ## Dynamic Updates & Shared Leases
-> `/etc/bind/named.conf`
+ - create a rdnc key
+  ```Bash
+   #  echo rndc-confgen >> /etc/bind/rndc.conf
+   #  chmod 660 /etc/bind/rndc.conf
+   #  chown root:bind /etc/bind/rndc.conf
+  ```
+---
+
+### edit your configs accordingly:
+
 ***named.conf***
+> `/etc/bind/named.conf`
 ```yaml
 include "/etc/bind/named.conf.options";
 include "/etc/bind/named.conf.local";
@@ -266,16 +285,39 @@ omapi-key omapi_key;
 ```
 
 ---
+
 ***Always make ure to update Bind9 when changing configs!!!***
 
+**edit AppArmor** *(if you fail to restart isc-dhcp)*
+
 ```Bash
-  #  named-checkconf 
-  #  named-checkconf /etc/bind/named.conf.options
-  #  named-checkconf /etc/bind/named.conf.local
-  #  named-checkzone foreman.de /etc/bind/zones/foreman.de
-  #  named-checkzone foreman.de /etc/bind/zones/foreman.de.rev
-  #  sudo systemctl restart bind9
+# sudo nano /etc/apparmor.d/usr.sbin.dhcpd  
 ```
+
+> add 
+> ```perl
+>/etc/bind/ rw,
+>/etc/bind/** rw,
+>```
+
+restart AppArmor:
+
+```Bash
+# apparmor_parser -r /etc/apparmor.d/usr.sbin.dhcpd  
+```
+
+  **restart/refresh DNS & DHCP**
+  
+```Bash
+# named-checkzone foreman.de /etc/bind/zones/foreman.de
+# named-checkzone foreman.de /etc/bind/zones/foreman.de.rev
+# named-checkconf /etc/bind/named.conf.options
+# named-checkconf
+# sudo systemctl restart bind9
+# sudo systemctl restart isc-dhcp-server
+```  
+´
+
 ---
 
 ## Initialize Foreman with Discovery Plugin
@@ -290,6 +332,7 @@ foreman-installer \
 --foreman-proxy-tftp-managed true \
 --foreman-proxy-tftp-servername 192.168.122.20
 ```
+
 ---
 
 ***check if Discovery Plugin created the boot image files***
