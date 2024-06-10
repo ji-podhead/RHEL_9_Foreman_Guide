@@ -528,5 +528,100 @@ LABEL discovery
 ---
 
 
-## Configure Foreman for external DNS management
+## Configure Foreman for external DNS & DHCP management
 
+
+Follow the procedure described in the [Foreman Doc's](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#Configuring_Server_with_an_External_DHCP_Server_foreman)
+
+```bash
+# sudo dnf install nfs-common
+# mkdir -p /mnt/nfs/etc/dhcp /mnt/nfs/var/lib/dhcpd
+# chown -R foreman-proxy /mnt/nfs
+# showmount -e foreman.de
+# rpcinfo -p foreman.de
+```
+
+edit `/etc/fstab`
+
+>```
+>192.168.122.7:/exports/etc/dhcp /mnt/nfs/etc/dhcp
+>ro,vers=3,auto,nosharecache,context="system_u:object_r:dhcp_etc_t:s0" 0 0
+>
+>192.168.122.7:/exports/var/lib/dhcpd /mnt/nfs/var/lib/dhcpd
+>ro,vers=3,auto,nosharecache,context="system_u:object_r:dhcpd_state_t:s0" 0 0
+>```
+
+reload the daemon and mount:
+
+```bash
+# systemctl daemon-reload
+# mount -a
+```
+> dont worry if you get a warining like this if you have additional stuff in the fstab like root fs:
+> - `mount: 0: der Einhängepunkt ist nicht vorhanden.`
+
+if it fails you can debug like this:
+```bash
+# mount -t nfs 192.168.122.7:/exports/etc/dhcp /mnt/nfs/etc/dhcp 
+# cd /mnt/nfs/etc/dhcp
+# ls
+```
+>```
+>debug          dhclient-enter-hooks.d  dhcpd6.conf  Komapi_key.+002+57454.key      old.conf   rndc.conf
+>dhclient.conf  dhclient-exit-hooks.d   dhcpd.conf   Komapi_key.+002+57454.private  omapi.key  rndc.key
+>```
+>
+ - you can also try to disable firewall
+>```
+> # sudo sytsemctl disable firewalld
+>```
+>
+
+check the shared leases
+```bash
+# ls /mnt/nfs/var/lib/dhcpd
+```
+>```
+>dhcpd6.leases  dhcpd6.leases~  dhcpd.leases  dhcpd.leases~
+>```
+
+login to foreman-proxy user
+```bash
+#  su foreman-proxy -s /bin/bash
+```
+check if he has acces to the files
+
+```bash
+bash-5.1$ cat /mnt/nfs/etc/dhcp/dhcpd.conf
+```
+
+>```
+>authoritative;
+>default-lease-time 14400;
+>max-lease-time 18000;
+>log-facility local7;
+>...
+>```
+
+```bash
+bash-5.1$  cat /mnt/nfs/var/lib/dhcpd/dhcpd.leases
+```
+
+>```
+># The format of this file is documented in the dhcpd.leases(5) manual page.
+># This lease file was written by isc-dhcp-4.4.3-P1
+>...
+>```
+
+```
+[root@foreman dhcp]# foreman-installer \
+--enable-foreman-proxy-plugin-dhcp-remote-isc \
+--foreman-proxy-dhcp-provider=remote_isc \
+--foreman-proxy-dhcp-server=foreman.de \
+--foreman-proxy-dhcp=true \
+--foreman-proxy-plugin-dhcp-remote-isc-dhcp-config /mnt/nfs/etc/dhcp/dhcpd.conf \
+--foreman-proxy-plugin-dhcp-remote-isc-dhcp-leases /mnt/nfs/var/lib/dhcpd/dhcpd.leases \
+--foreman-proxy-plugin-dhcp-remote-isc-key-name=omapi_key \
+--foreman-proxy-plugin-dhcp-remote-isc-key-secret=Rf8oLo11/SYUi0ulXc+EAt9meiZPXOA0QqJR779UDV0xRphg0jwU55yapEViRqytMn0gy7ohtytZrVa6UzJkjQ== \
+--foreman-proxy-plugin-dhcp-remote-isc-omapi-port=7911
+```
