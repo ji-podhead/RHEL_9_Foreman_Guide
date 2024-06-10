@@ -698,7 +698,7 @@ sudo systemctl restart foreman-proxy
 ## Debugging
 - `tail /var/logs/foreman/production.log -f`
 - `journalctl -u named.service -f`
-- `journalctl -u isc-dhcp -f`
+- `journalctl -u isc-dhcp-server -f`
 - `sudo journalctl -u tftp`
 - `nslookup <FQDN/ip> <DNS>`
 - [additional debugging steps](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
