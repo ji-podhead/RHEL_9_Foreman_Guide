@@ -7,7 +7,7 @@
  | [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge%20base)| [Install](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp)) | [Discovery and Provisioning](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning) | [libvirt](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/libvirt) | [proxmox](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/proxmox) | [diskless pxe-boot using zfs](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/diskless_pxe_using_zfs) |
 
 
-## *Foreman in a nested VM* managing external DNS & DHCP with Dynamic Updates 
+## *Foreman in a nested VM* managing external DNS & DHCP with Dynamic Updates & RNDC
 > - we will install & configure a Foreman-machine running inside a `Rocky Linux`-based VM
 > - we will install & configure our DHCP & DNS in `a seperate Debian-based VM`
 > - we will configure our DHCP to get managed by Foreman and `share its leases`
@@ -117,7 +117,7 @@
 
   ---
 
-## DHCP & DNS configs for Dynamic Updates 
+## DHCP & DNS configs for Dynamic Updates & RNDC
  - create a RNDC key
   ```Bash
    #  echo rndc-confgen >> /etc/bind/rndc.conf
@@ -277,18 +277,18 @@ subnet 192.168.122.0 netmask 255.255.255.0 {
 }
 
 ##################################################################################
-#								THIS WILL BE REQUIRED BY FOREMAN LATER
+#		THIS WILL BE REQUIRED BY FOREMAN LATER
 ##################################################################################
-#			---------------------------------------------------
+#		---------------------------------------------------
 # 		>> `ssec-keygen -a DH -b 512 -n HOST omapi_key` <<
-#			---------------------------------------------------
-# 			- copy the private key and paste it here
-#				- we choose DUFFIE HILBERT encryption here 
-#				- i coulndt get dnssec to generate hmac-sha256 encryption keys
-# 				- you can use TSIG to gen. hmac-sha256 encryption keys though:
-# 					- tsig-keygen >> omapi.key
-#				- but instead i used dnssec and checked --help for available algos
-#			---------------------------------------------------
+#		---------------------------------------------------
+# 		- copy the private key and paste it here
+#		- we choose DUFFIE HILBERT encryption here 
+#		- i coulndt get dnssec to generate hmac-sha256 encryption keys
+# 		- you can use TSIG to gen. hmac-sha256 encryption keys though:
+# 				- tsig-keygen >> omapi.key
+#		- but instead i used dnssec and checked --help for available algos
+#		---------------------------------------------------
 # omapi-port 7911;
 # key omapi_key {
 #        algorithm DH;
