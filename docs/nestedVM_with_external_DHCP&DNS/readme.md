@@ -695,106 +695,12 @@ sudo systemctl restart foreman-proxy
 ## Discovery walktrough and debugging
    <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/final_discovery_nestedv_flowchart.png?raw=true" align="center" />
 
-## Successfull Discovery Logs
+## Debugging
+- `tail /var/logs/foreman/production.log -f`
+- `journalctl -u named.service -f`
+- `sudo journalctl -u tftp`
+- `nslookup <FQDN/ip> <DNS>
+- [additional debugging steps](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
 
-***tail /var/logs/foreman/production.log -f***
-```
-2024-06-09T20:49:03 [I|app|8832e8d0] Started GET "/notification_recipients" for 192.168.122.1 at 2024-06-09 20:49:03 +0200
-2024-06-09T20:49:03 [I|app|8832e8d0] Processing by NotificationRecipientsController#index as JSON
-2024-06-09T20:49:03 [I|app|8832e8d0] Completed 200 OK in 11ms (Views: 0.2ms | ActiveRecord: 2.5ms | Allocations: 2231)
-2024-06-09T20:49:13 [I|app|cdbc9b4d] Started GET "/notification_recipients" for 192.168.122.1 at 2024-06-09 20:49:13 +0200
-2024-06-09T20:49:13 [I|app|cdbc9b4d] Processing by NotificationRecipientsController#index as JSON
-2024-06-09T20:49:13 [I|app|cdbc9b4d] Completed 200 OK in 11ms (Views: 0.2ms | ActiveRecord: 2.3ms | Allocations: 2231)
-2024-06-09T20:49:23 [I|app|432f5b59] Started GET "/notification_recipients" for 192.168.122.1 at 2024-06-09 20:49:23 +0200
-2024-06-09T20:49:23 [I|app|432f5b59] Processing by NotificationRecipientsController#index as JSON
-2024-06-09T20:49:23 [I|app|432f5b59] Completed 200 OK in 11ms (Views: 0.1ms | ActiveRecord: 2.3ms | Allocations: 2231)
-2024-06-09T20:49:30 [I|app|767c5aea] Started POST "/api/v2/discovered_hosts/facts" for 192.168.122.138 at 2024-06-09 20:49:30 +0200
-2024-06-09T20:49:30 [I|app|767c5aea] Processing by Api::V2::DiscoveredHostsController#facts as JSON
-2024-06-09T20:49:30 [I|app|767c5aea]   Parameters: {"facts"=>"[FILTERED]", "apiv"=>"v2", "discovered_host"=>{"facts"=>"[FILTERED]"}}
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on mac 
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on ip 
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on type Nic::Managed
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on name mac525400355ead
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on host_id 2
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on subnet_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on domain_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on attrs {}
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on provider 
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on username 
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on password [redacted]
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on virtual false
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on link true
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on identifier 
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on tag 
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on attached_to 
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on managed true
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on mode balance-rr
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on attached_devices 
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on bond_options 
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on primary true
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on provision true
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on compute_attributes {}
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on execution false
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on ip6 
-2024-06-09T20:49:30 [I|aud|767c5aea] Nic::Managed (2) create event on subnet6_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on name mac525400355ead
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on last_compile 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on root_pass 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on architecture_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on operatingsystem_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on ptable_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on medium_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on build false
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on comment 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on disk 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on installed_at 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on model_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on hostgroup_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on owner_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on owner_type 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on enabled true
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on puppet_ca_proxy_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on managed false
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on use_image 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on image_file 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on uuid 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on compute_resource_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on puppet_proxy_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on certname 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on image_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on organization_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on location_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on otp 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on realm_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on compute_profile_id 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on provision_method 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on grub_pass 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on global_status 0
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on lookup_value_matcher 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on pxe_loader 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on initiated_at 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on build_errors 
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on creator_id 1
-2024-06-09T20:49:30 [I|aud|767c5aea] Host::Base (2) create event on discovery_rule_id 
-2024-06-09T20:49:33 [I|app|c1b54672] Started GET "/notification_recipients" for 192.168.122.1 at 2024-06-09 20:49:33 +0200
-2024-06-09T20:49:34 [I|app|c1b54672] Processing by NotificationRecipientsController#index as JSON
-2024-06-09T20:49:34 [I|app|c1b54672] Completed 200 OK in 28ms (Views: 0.2ms | ActiveRecord: 9.3ms | Allocations: 5349)
-2024-06-09T20:49:35 [I|app|767c5aea] Import facts for 'mac525400355ead' completed. Added: 279, Updated: 0, Deleted 0 facts
-2024-06-09T20:49:35 [I|aud|767c5aea] Model (2) create event on name KVM
-2024-06-09T20:49:35 [I|aud|767c5aea] Model (2) create event on info 
-2024-06-09T20:49:35 [I|aud|767c5aea] Model (2) create event on vendor_class 
-2024-06-09T20:49:35 [I|aud|767c5aea] Model (2) create event on hardware_model 
-2024-06-09T20:49:35 [I|aud|767c5aea] Nic::Managed (2) update event on mac , 52:54:00:35:5e:ad
-2024-06-09T20:49:35 [I|aud|767c5aea] Nic::Managed (2) update event on identifier , enp1s0
-2024-06-09T20:49:35 [I|app|767c5aea] Detected IPv4 subnet: s1 with taxonomy ["Default Organization"]/["Default Location"]
-2024-06-09T20:49:35 [I|app|767c5aea] Assigned location: Default Location
-2024-06-09T20:49:35 [I|app|767c5aea] Assigned organization: Default Organization
-2024-06-09T20:49:35 [I|aud|767c5aea] Host::Base (2) update event on model_id , 2
-2024-06-09T20:49:35 [I|aud|767c5aea] Host::Base (2) update event on owner_id , 1
-2024-06-09T20:49:35 [I|aud|767c5aea] Host::Base (2) update event on owner_type , User
-2024-06-09T20:49:35 [I|aud|767c5aea] Host::Base (2) update event on organization_id , 1
-2024-06-09T20:49:35 [I|aud|767c5aea] Host::Base (2) update event on location_id , 2
-2024-06-09T20:49:35 [I|aud|767c5aea] Nic::Managed (2) update event on subnet_id , 1
-2024-06-09T20:49:35 [I|app|767c5aea] Completed 201 Created in 5468ms (Views: 1.9ms | ActiveRecord: 2906.4ms | Allocations: 548824)
-```
+## Successfull Discovery Logs
 
