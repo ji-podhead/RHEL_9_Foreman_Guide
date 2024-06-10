@@ -2,16 +2,17 @@
 
 
 
+
  | [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge%20base)| [Install](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp)) | [Discovery and Provisioning](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning) | [libvirt](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/libvirt) | [proxmox](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/proxmox) | [diskless pxe-boot using zfs](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/diskless_pxe_using_zfs) |
 
 
 ## *Foreman in a nested VM* managing external DNS & DHCP with Dynamic Updates 
 > - we will install & configure a Foreman-machine running inside a `Rocky Linux`-based VM
 > - we will install & configure our DHCP & DNS in `a seperate Debian-based VM`
-> - we will configure our DHCP to get managed by Foreman and share its leases
+> - we will configure our DHCP to get managed by Foreman and `share its leases`
 > - we will configure Foreman to `manage our external DHCP and DNS`
 > - this Guide will also cover how to `debug your servers` and monitor the network 
-> - in addition the Guide provides a `walktrough trough the Discovery process`   
+> - in addition the Guide provides a `walk trough the Discovery process`   
 
 ---
 <table style="border-collapse: collapse; width: 100%;">
@@ -98,7 +99,7 @@
     
 	- 2.  [Configuring Foreman server with an external DHCP server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#Configuring_Server_with_an_External_DHCP_Server_foreman)
 - both procedures will be covered in this  guide
-- I was to lazy and directly installed on my Proxmox-Machine, which is stupid:
+- I was to lazy and directly installed the external servers on my Proxmox-Machine, which is stupid:
 	- DNS holds a huge risk when misconfigured or attacked
 	- if your DNS starves, it will also starve all your Proxmox-stuff and might even damage the Filesystem 
 
@@ -116,7 +117,7 @@
   ---
 
 ## Dynamic Updates & Shared Leases
- - create a rdnc key
+ - create a RNDC key
   ```Bash
    #  echo rndc-confgen >> /etc/bind/rndc.conf
    #  chmod 660 /etc/bind/rndc.conf
@@ -274,19 +275,25 @@ subnet 192.168.122.0 netmask 255.255.255.0 {
   option domain-name-servers 192.168.122.7;
 }
 
-########################################################################
-#		THIS WILL BE REQUIRED BY FOREMAN LATER
-########################################################################
-#	- we choose DUFFIE HILBERT encryption here
-#	- i coulndt get dnssec to generate encryption keys
-#	- instead i used TSIG and checked help for available algos
-########################################################################
-omapi-port 7911;
-key omapi_key {
-        algorithm DH;
-        secret "Rf8oLo11/SYUi0ulXc+EAt9meiZPXOA0QqJR779UDV0xRphg0jwU55yapEViRqytMn0gy7ohtytZrVa6UzJkjQ==";
-};
-omapi-key omapi_key;
+##################################################################################
+#								THIS WILL BE REQUIRED BY FOREMAN LATER
+##################################################################################
+#			---------------------------------------------------
+# 		>> `ssec-keygen -a DH -b 512 -n HOST omapi_key` <<
+#			---------------------------------------------------
+# 			- copy the private key and paste it here
+#				- we choose DUFFIE HILBERT encryption here 
+#				- i coulndt get dnssec to generate hmac-sha256 encryption keys
+# 				- you can use TSIG to gen. hmac-sha256 encryption keys though:
+# 					- tsig-keygen >> omapi.key
+#				- but instead i used dnssec and checked --help for available algos
+#			---------------------------------------------------
+# omapi-port 7911;
+# key omapi_key {
+#        algorithm DH;
+#        secret # "Rf8oLo11/SYUi0ulXc+EAt9meiZPXOA0QqJR779UDV0xRphg0jwU55yapEViRqytMn0gy7ohtytZrVa6UzJkjQ==";
+# };
+# omapi-key omapi_key;
 #########################################################################
 ```
 
@@ -351,7 +358,8 @@ restart AppArmor:
 
 - in my case they where missing, so i had to copy the image intoo the boot folder
 	 - i used my nfs, but you can of course use ***securecopy*** as well  
-
+- the outcome is that the pxe boot loader constantly tries to boot (repeats the counter on the blue screen)
+	- ***this typically means that theres a TFTP-misconfiguration***
 ---
 
 ***configure `pxelinux.cfg/default`***
@@ -368,7 +376,7 @@ LABEL discovery
 
 ***configure Foreman to be ready for discovery & provisioning***
 - add a subnet, as well as a hostgroup and configure foreman 
-- everything you need to know is explained in detail in the [discovery & provisioning section of this guide](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning)
+- everything you need to know is explained in detail in the [discovery & provisioning section](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning)
 
 ---
 <u>*we will not upgrade Foreman to manage DNS & DHCP yet!*</u>
@@ -378,8 +386,16 @@ LABEL discovery
 
 
 
-## Configure DHCP
+## Configure and install DHCP
+
+- install isc-dhcp-server
+
+```Bash
+# apt install isc-dhcp-server -y
+```
+
 - configure Firewall (debian)
+
 ```Bash
 # sudo apt-get install iptables-persistent netfilter-persistent
 # sudo iptables -A INPUT -p tcp --dport 7911 -j 
@@ -393,22 +409,68 @@ LABEL discovery
 # sudo iptables-save > /etc/iptables/rules.v4
 # sudo netfilter-persistent reload
 ```
+---
+
+***add the Foreman user***
+
+```Bash
+  #  useradd -u 982 -g 982 -s /sbin/nologin foreman
+  #  sudo usermod -u 982 -g 982 foreman 
+  ```
+> user and group can be found out via foreman-machine like this:
+>```
+># id -u foreman
+># id -g foreman
+>```
+
+-    restore the read and execute flags:
+```Bash
+    # chmod o+rx /etc/dhcp/
+    # chmod o+r /etc/dhcp/dhcpd.conf
+    # chattr +i /etc/dhcp/ /etc/dhcp/dhcpd.conf
+```
+
+---
+
+
+***setup nfs***
+
+- install nfs and  create the export paths
+
+```Bash
+  #  sudo apt-get install nfs-kernel-server
+  #  systemctl enable --now nfs-server
+  #  mkdir -p /exports/var/lib/dhcpd /exports/etc/dhcp
+```
+
+- start the nfs server
+```Bash
+ # systemctl enable --now nfs-server
+ ```
+
+> - you can check the status like this:
+> ```bash
+> # sudo systemctl status nfs-kernel-server
+>```
+
 - edit the fstab for persistent nfs export
 
 ```Bash
 # nano /etc/fstab
 ```
+
 >```yaml
 >/var/lib/dhcp /exports/var/lib/dhcpd none bind,auto 0 0
 >/etc/dhcp /exports/etc/dhcp none bind,auto 0 0
 >```
-- create the export paths, reload the Daemon and mount everything in fstab using `mount -a`
+
+- reload the Daemon and mount everything in fstab using `mount -a`
+
 ```Bash
-# mkdir -p /exports/var/lib/dhcpd /exports/etc/dhcp
 # systemctl daemon-reload
 # mount -a
 ```
-- edit the exports file and make changes active
+- edit the exports file and activate our nfs
 
 ```Bash
 # nano /etc/exports
@@ -421,148 +483,50 @@ LABEL discovery
 >/exports/etc/dhcp 192.168.122.20(ro,async,no_root_squash,no_subtree_check,nohide)
 >/exports/var/lib/dhcpd 192.168.122.20(ro,async,no_root_squash,no_subtree_check,nohide)
 
+---
 
 ***omapi-key***
+
 ```Bash
 # cd /etc/bind
-# tsig-keygen >> omapi.key
+# ssec-keygen -a DH -b 512 -n HOST omapi_key
 # ls
 ```
-> we should see the generated key: `002+57454.private`
+
+> alternatively you can use TSIG for hmac-sha256 encryption keys
+>```
+># tsig-keygen >> omapi.key
+>```
+
+
+- print the generated file: `002+57454.private`
 
 ```
  cat Komapi_key.+002+57454.private
 ```
+
+
+- copy the private key and paste it in the `omapi-key definition` of your `dhcpd.conf`
+>```
+>omapi-port 7911;
+>key omapi_key {
+ >       algorithm DH;
+ >       secret >"Rf8oLo11/SYUi0ulXc+EAt9meiZPXOA0QqJR779UDV0xRphg0jwU55yapEViRqytMn0gy7ohtytZrVa6UzJkjQ==";
+>};
+>omapi-key omapi_key;
+>```
+
+---
+
+- start the dhcp server
+
+```bash
+# systemctl enable --now dhcpd
 ```
-  308  nano named.conf.options
-  309  history | grep named
-  310  named-checkconf /etc/bind/named.conf.local
-  311  named-checkconf /etc/bind/named.conf.options
-  312  named-checkconf /etc/bind/named.conf.options
-  313  named-checkconf
-  314  sudo systemctl restart isc-dhcpserver
-  315  sudo systemctl restart isc-dhcp-server
-  316  journalctl -u named.service -f
-  317  dnssec-keygen -a HMAC-MD5 -b 512 -n HOST omapi_key
-  318  dnssec-keygen -a HMAC-MD5 -b 512 -n HOST omapi_key
-  319  dnssec-keygen -a HMAC-SHA256 -b 512 -n HOST omapi_key
-  320   apt-get -y install bind9utils
-  321  dnssec-keygen -a HMAC-MD5 -b 512 -n HOST omapi_key
-  322  tsig-keygen -a HMAC-MD5 -b 512 -n HOST omapi_key
-  323  tsig-keygen -a HMAC-MD5 -n HOST omapi_key
-  324  tsig-keygen -a -n HOST omapi_key
-  325  tsig-keygen -a  HOST omapi_key
-  326  tsig-keygen
-  327  cd /etc/dhcp
-  328  tsig-keygen >> omapi.key
-  329  grep "^Key" omapikey.+*.private | cut -d' ' -f2
-  330  grep "^Key" omapi.key.+*.private | cut -d' ' -f2
-  331  grep "^Key" omapi.key. | cut -d' ' -f2
-  332  grep "^Key" omapi.key | cut -d' ' -f2
-  333  ls
-  334  cat omapi.key
-  335  tsig-keygen >> omapi.key
-  336  cat omapi.key
-  337  tsig-keygen > omapi.key
-  338  cat omapi.key
-  339  grep "^Key" omapi.key | cut -d' ' -f2
-  340  cat omapi.key
-  341  dnssec-keygen  my_tsig_key
-  342  dnssec-keygen --help
-  343  dnssec-keygen -a DH -b 128 -n HOST omapi_key
-  344  dnssec-keygen -a DH -b 512 -n HOST omapi_key
-  345  grep ^Key Komapi_key.+*.private | cut -d ' ' -f2
-  346  nano /etc/dhcp/dhcpd.conf
-  347  ls
-  348  cat Komapi_key.+002+57454.private
-  349  nano /etc/dhcp/dhcpd.conf
-  350  nano /etc/dhcp/dhcpd.conf
-  351  firewall-cmd --add-service dhcp
-  352  groupadd -g 990 foreman
-  353  useradd -u 993 -g 990 -s /sbin/nologin foreman
-  354  groupadd -g 982 foreman
-  355  sudo groupdel foreman
-  356  sudo groupdel foreman
-  357  sudo groupmod -g 982 foreman
-  358  sudo groupmod -g 982 foreman
-  359  useradd -u 982 -g 982 -s /sbin/nologin foreman
-  360  sudo usermod -u 982 -g 982 foreman
-  361  sudo apt-get install nfs-kernel-server
-  362  systemctl enable --now nfs-server
-  363  mkdir -p /exports/var/lib/dhcpd /exports/etc/dhcp
-  364  /var/lib/dhcpd /exports/var/lib/dhcpd none bind,auto 0 0
-  365  nano /etc/fstab
-  366  /var/lib/dhcpd /exports/var/lib/dhcpd none bind,auto 0 0
-  367  nano /etc/fstab
-  368  mount -a
-  369  systemctl daemon-reload
-  370  mount -a
-  371  nano /etc/fstab
-  372  mkdir -p /exports/var/lib/dhcpd /exports/etc/dhcp
-  373  mount -a
-  374  cd /var/lib/d
-  375  cd /var/lib
-  376  ls
-  377  cd /var/lib/dhcp
-  378  ls
-  379  nano /etc/fstab
-  380  dmesg mount
-  381  dmesg
-  382  mount -a
-  383  nano /etc/fstab
-  384  mkdir -p /exports/var/lib/dhcpd /exports/etc/dhcp
-  385  cd /exports/var/lib
-  386  ls
-  387  ls -l 
-  388  nano /etc/fstab
-  389  sudo mount /var/lib/dhcpd /exports/var/lib/dhcpd
-  390  ls /var/lib
-  391  nano /etc/fstab
-  392  mount -a
-  393  systemctl daemon-reload
-  394  mount -a
-  395  nano /etc/exports
-  396  nano /etc/exports
-  397  exportfs -rva
-  398  sudo iptables -A INPUT -p tcp --dport 7911 -j ACCEPT
-  399  sudo apt-get update
-  400  sudo apt-get install iptables-persistent
-  401  sudo iptables -A INPUT -p tcp --syn --dport 2049 -j ACCEPT
-  402  sudo iptables -A INPUT -p udp --dport 2049 -j ACCEPT
-  403  sudo iptables -A INPUT -p tcp --dport 111 -j ACCEPT
-  404  sudo iptables -A INPUT -p udp --dport 111 -j ACCEPT
-  405  sudo iptables -A INPUT -p tcp --dport 32765:61000 -j ACCEPT
-  406  sudo iptables -A INPUT -p udp --dport 32765:61000 -j ACCEPT
-  407  sudo netfilter-persistent save
-  408  sudo iptables-save > /etc/iptables/rules.v4
-  409  sudo netfilter-persistent reload
-  410  sudo iptables-restore < /etc/iptables/rules.v4
-  411  systemstctl status nfs
-  412  systemstctl status nfs-utils
-  413  systemstctl status nfs-daemon
-  414  systemstctl status nfs-common
-  415  systemstctl status nfsd
-  416  sudo systemctl start nfs-kernel-server
-  417  sudo systemctl status nfs-kernel-server
-  418  journalctl -u nfs-kernel-server
-  419  journalctl -u nfs-kernel
-  420  journalctl -u nfs
-  421  sudo systemctl status nfs-kernel-server
-  422  systemctl daemon-reload
-  423  exportfs -v
-  424  nano /etc/fstab
-  425  nano /etc/dhcp/dhcpd.conf
-  426  journalctl -u named.service -f
-  427  cat /var/lib/dhcp/dhcpd.leases
-  428  nano /etc/dhcp/dhcpd.conf
-  429  sudo nano /etc/bind/named.conf.options
-  430  sudo nano /etc/bind/named.conf
-  431  sudo nano /etc/bind/named.conf.local
-  432  nano /etc/bind/zones/foreman.de
-  433  nano /etc/bind/zones/foreman.de.rev
-  434  nano /etc/fstab
-  435  nano /etc/exports
-  ```
+
+
+---
+
 
 ## Configure Foreman for external DNS management
 
