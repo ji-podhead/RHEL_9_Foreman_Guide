@@ -1,4 +1,5 @@
 
+
 ## *Foreman in a nested VM* managing external DNS & DHCP with Dynamic Updates 
 > - we will install & configure a Foreman-machine running inside a Proxmox-libvirt VM
 > - we will install & configure our DHCP & DNS on Debian in a seperate libvirt-VM
@@ -8,24 +9,47 @@
 >  - Discovery process walktrough   
 
 ---
-
-### Preview
-
-
-   <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/final_discovery_nestedv_flowchart.png?raw=true" align="center" width="500" />
-
----
-
-### Specs used in this Guide
-
-| ***Description*** | ***Type***| 
-|--------------------|-----------|
-| Host | 192.168.122.1 |
-| PXE-Test-Machine | 192.169.122.138 |
-| Foreman-Proxy | 192.168.122.20 |
-| Foreman-FQDN | foreman.de |
-| DNS & THCP-Server | 192.168.122.7 |
-| Subnet |  `adress`  192.168.122.0  <br> `range` 192.168.122.1 192.168.122.254 <br> `option routers` 192.168.122.7 <br> `option broadcast-address` 192.168.122.255 |
+<table style="border-collapse: collapse; width: 100%;">
+    <tr>
+        <td style="width: 50%; vertical-align: top;">
+            <table>
+                <tr>
+                    <th colspan="2" style="background-color: #f0f0f0; text-align: center;">Specs used in this Guide</th>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Host</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">192.168.122.1</td>
+                        <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">PXE-Test-Machine</td>
+                 <td style="padding: 8px; border: 1px solid #ddd;">192.169.122.138</td>
+                         </tr>
+                             <tr>
+                     <td style="padding: 8px; border: 1px solid #ddd;">Foreman-Proxy</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">192.168.122.20 </td>
+                        </tr>
+                            <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Foreman-FQDN</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">foreman.de </td>
+                        <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">DNS & THCP-Server</td>
+                <td style="padding: 8px; border: 1px solid #ddd;"> 192.168.122.7</td>
+                    </tr>
+                </tr>
+		    <th colspan="2" style="background-color: #f0f0f0; text-align: center;">Subnet</th>
+			    <tr><td>adress<td>192.168.122.0</td></tr> 
+			    <tr><td>range</td><td>192.168.122.1 192.168.122.254</td></tr>
+			    <tr><td>option routers</td><td> 192.168.122.7</td></tr> 
+			    <tr><td>option broadcast-address</td><td>192.168.122.255</td></tr>
+			    </td>
+                </tr>
+            </table>
+        </td>
+        <td style="width: 50%; vertical-align: top;">
+            <h3>Preview</h3>
+            <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/final_discovery_nestedv_flowchart.png?raw=true" align="center" width="500" />
+        </td>
+    </tr>
+</table>
 
 
 ---
