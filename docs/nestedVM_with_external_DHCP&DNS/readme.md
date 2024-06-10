@@ -17,6 +17,7 @@
 
 ---
 
+<div>
 <table style="border-collapse: collapse; width: 100%;">
     <tr>
         <td style="width: 50%; vertical-align: top;">
@@ -66,7 +67,7 @@
         </td>
     </tr>
 </table>
-
+</div>
 
 ---
 
