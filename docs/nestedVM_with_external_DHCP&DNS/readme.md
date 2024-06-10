@@ -65,6 +65,15 @@
 </table>
 
 
+---
+
+ ***Please proceed with the DNS section of my [DNS-Network Guide](https://ji-podhead.github.io/Network-Guides/DNS/install/) if needed:***
+ - All DNS-related topics needed are explained in detail here:
+> - [Knowledge Base ](https://ji-podhead.github.io/Network-Guides/DNS/Knowledge%20Base)
+> - [Install & Config](https://ji-podhead.github.io/Network-Guides/DNS/install)
+> - [Test & Debug](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
+> - [Attack- Vectors and Scenario](https://ji-podhead.github.io/Network-Guides/DNS/attackVectorsAndScenario)
+> - [Security & Protection](https://ji-podhead.github.io/Network-Guides/DNS/protection)
 
 
 ---
@@ -73,6 +82,7 @@
 - create a seperate `debian-based` machine 
 - setup your `Bind9 DNS` and `ISC-DHCP`
 	- I coulnd get my DHCP on my Foreman Machine to work with the provided Proxmox-NIC
+- we create a `RNDC-key` and set up `dynamic updates` in our DHCP and DNS
 - **Foreman wont register your machines, even if they have a valid tftp connection, unless you share the leases of DHCP!** 
 > otherwise you will get this error in the proxy logs: 
 >```json
@@ -92,15 +102,6 @@
 	- DNS holds a huge risk when misconfigured or attacked
 	- if your DNS starves, it will also starve all your Proxmox-stuff and might even damage the Filesystem 
 
----
-
- ***Please proceed with the DNS section of my [DNS-Network Guide](https://ji-podhead.github.io/Network-Guides/DNS/install/) if needed:***
- - All DNS-related topics needed are explained in detail here:
-> - [Knowledge Base ](https://ji-podhead.github.io/Network-Guides/DNS/Knowledge%20Base)
-> - [Install & Config](https://ji-podhead.github.io/Network-Guides/DNS/install)
-> - [Test & Debug](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
-> - [Attack- Vectors and Scenario](https://ji-podhead.github.io/Network-Guides/DNS/attackVectorsAndScenario)
-> - [Security & Protection](https://ji-podhead.github.io/Network-Guides/DNS/protection)
 
 
 ---
