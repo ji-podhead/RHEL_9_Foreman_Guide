@@ -16,6 +16,7 @@
 > - in addition the Guide provides a `walk trough the Discovery process`   
 
 ---
+
 <table style="border-collapse: collapse; width: 100%;">
     <tr>
         <td style="width: 50%; vertical-align: top;">
@@ -70,7 +71,8 @@
 ---
 
  ***Please proceed with the DNS section of my [DNS-Network Guide](https://ji-podhead.github.io/Network-Guides/DNS/install/) if needed:***
- - All DNS-related topics needed are explained in detail here:
+ 
+- All DNS-related topics needed are explained in detail here:
 > - [Knowledge Base ](https://ji-podhead.github.io/Network-Guides/DNS/Knowledge%20Base)
 > - [Install & Config](https://ji-podhead.github.io/Network-Guides/DNS/install)
 > - [Test & Debug](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
@@ -81,6 +83,7 @@
 ---
 
 ###  DHCP & DNS installation & configuration steps
+
 - create a seperate `debian-based` machine 
 - setup your `Bind9 DNS` and `ISC-DHCP`
 	- I coulnd get my DHCP on my Foreman Machine to work with the provided Proxmox-NIC
