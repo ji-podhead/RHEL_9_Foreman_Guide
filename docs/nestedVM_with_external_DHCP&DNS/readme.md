@@ -698,9 +698,10 @@ sudo systemctl restart foreman-proxy
 ## Debugging
 - `tail /var/logs/foreman/production.log -f`
 - `journalctl -u named.service -f`
+- `journalctl -u isc-dhcp -f`
 - `sudo journalctl -u tftp`
-- `nslookup <FQDN/ip> <DNS>
+- `nslookup <FQDN/ip> <DNS>`
 - [additional debugging steps](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
 
 ## Successfull Discovery Logs
-
+- can be found [here](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP%26DNS/discovery.log)
