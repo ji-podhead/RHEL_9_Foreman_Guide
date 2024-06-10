@@ -1,16 +1,17 @@
 
 
 
+
  | [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge%20base)| [Install](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp)) | [Discovery and Provisioning](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning) | [libvirt](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/libvirt) | [proxmox](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/proxmox) | [diskless pxe-boot using zfs](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/diskless_pxe_using_zfs) |
 
 
 ## *Foreman in a nested VM* managing external DNS & DHCP with Dynamic Updates 
-> - we will install & configure a Foreman-machine running inside a Proxmox-libvirt VM
-> - we will install & configure our DHCP & DNS on Debian in a seperate libvirt-VM
-> - we will configure our DHCP get managed by Foreman and share its leases
-> - we will configure Foreman to manage our external DHCP and DNS
-> - how to debug your servers and monitor the network 
->  - Discovery process walktrough   
+> - we will install & configure a Foreman-machine running inside a `Rocky Linux`-based VM
+> - we will install & configure our DHCP & DNS in `a seperate Debian-based VM`
+> - we will configure our DHCP to get managed by Foreman and share its leases
+> - we will configure Foreman to `manage our external DHCP and DNS`
+> - this Guide will also cover how to `debug your servers` and monitor the network 
+> - in addition the Guide provides a `walktrough trough the Discovery process`   
 
 ---
 <table style="border-collapse: collapse; width: 100%;">
@@ -69,29 +70,32 @@
 ---
 
 ###  DHCP & DNS installation & configuration steps
-- create a seperate machine 
-  - I was to lazy and directly installed on my Proxmox-Machine, which is stupid:
-	- DNS holds a huge risk when misconfigured or attacked
-	- if your DNS starves, it will also starve all your Proxmox-stuff and might even damage the Filesystem 
-- setup your Debian-based `Bind9 DNS` and `ISC-DHCP`
+- create a seperate `debian-based` machine 
+- setup your `Bind9 DNS` and `ISC-DHCP`
 	- I coulnd get my DHCP on my Foreman Machine to work with the provided Proxmox-NIC
 - **Foreman wont register your machines, even if they have a valid tftp connection, unless you share the leases of DHCP!** 
-> otherwise you will get this error: 
+> otherwise you will get this error in the proxy logs: 
 >```json
 >Started POST /api/v2/discovered_hosts/facts
 >Finished POST /api/v2/discovered_hosts/facts with 404 (1.07 ms) 
 >```
-- Therefor these procedures have to get accomplished:
+> and the discovery image will post a  `404` as well:
+>
+> <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/foreman_nestedVM_failed.png?raw=true" align="center" height="200" />
+
+- Therefore these procedures have to get accomplished:
 	- 1.  [Configuring an external DHCP server to use with Foreman server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#configuring-an-external-dhcp-server_foreman)
     
 	- 2.  [Configuring Foreman server with an external DHCP server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#Configuring_Server_with_an_External_DHCP_Server_foreman)
 - both procedures will be covered in this  guide
-
+- I was to lazy and directly installed on my Proxmox-Machine, which is stupid:
+	- DNS holds a huge risk when misconfigured or attacked
+	- if your DNS starves, it will also starve all your Proxmox-stuff and might even damage the Filesystem 
 
 ---
 
  ***Please proceed with the DNS section of my [DNS-Network Guide](https://ji-podhead.github.io/Network-Guides/DNS/install/) if needed:***
- - All DNS-related topics needed are explained in detail here
+ - All DNS-related topics needed are explained in detail here:
 > - [Knowledge Base ](https://ji-podhead.github.io/Network-Guides/DNS/Knowledge%20Base)
 > - [Install & Config](https://ji-podhead.github.io/Network-Guides/DNS/install)
 > - [Test & Debug](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
@@ -286,10 +290,11 @@ omapi-key omapi_key;
 
 ---
 
-***Always make ure to update Bind9 when changing configs!!!***
+***Always make sure to update Bind9 when changing configs!!!***
 
-**edit AppArmor** *(if you fail to restart isc-dhcp)*
-
+**edit AppArmor** 
+> - <u>*if you fail to restart isc-dhcp*</u>
+ 
 ```Bash
 # sudo nano /etc/apparmor.d/usr.sbin.dhcpd  
 ```
@@ -321,17 +326,20 @@ restart AppArmor:
 ---
 
 ## Initialize Foreman with Discovery Plugin
-- set managed DNS & DHCP to false
-```Bash
-foreman-installer \ 
---foreman-proxy-dns true \
---foreman-proxy-dns-managed false \ 
---foreman-proxy-dhcp true \
---foreman-proxy-dhcp-managed false
---foreman-proxy-tftp true \
---foreman-proxy-tftp-managed true \
---foreman-proxy-tftp-servername 192.168.122.20
-```
+- get the repos, configure firewall...etc
+	- everything you need to know is explained in detail in the [install section of this guide](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp))
+> -  <u>*but dont upgrade foreman to use managed DNS & DHCP  yet!!*</u>
+> - ***set managed DNS & DHCP to false:***
+>```Bash
+>foreman-installer \ 
+>--foreman-proxy-dns true \
+>--foreman-proxy-dns-managed false \ 
+>--foreman-proxy-dhcp true \
+>--foreman-proxy-dhcp-managed false
+>--foreman-proxy-tftp true \
+>--foreman-proxy-tftp-managed true \
+>--foreman-proxy-tftp-servername 192.168.122.20
+>```
 
 ---
 
@@ -358,23 +366,18 @@ LABEL discovery
 
 ***configure Foreman to be ready for discovery & provisioning***
 - add a subnet, as well as a hostgroup and configure foreman 
-- everything you need to know is explained in detail in the [install section of this guide](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp))
+- everything you need to know is explained in detail in the [discovery & provisioning section of this guide](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning)
+
+---
+<u>*we will not upgrade Foreman to manage DNS & DHCP yet!*</u>
+> -  first we need to configure our DNS & DHCP, as well as Foreman to manage our external servers,  which we will do int the next step 
 
 ---
 
-- we will not upgrade foreman foreman yet!
--  first we need to configure our DNS&DHCP, as well as foreman to manage our external servers,  which we will do int the next step 
-
----
-
-## Dynamic Update
-```
-
-```
 
 
 ## Configure DHCP
-- Firewall (debian)
+- configure Firewall (debian)
 ```Bash
 # sudo apt-get install iptables-persistent netfilter-persistent
 # sudo iptables -A INPUT -p tcp --dport 7911 -j 
@@ -397,7 +400,7 @@ LABEL discovery
 >/var/lib/dhcp /exports/var/lib/dhcpd none bind,auto 0 0
 >/etc/dhcp /exports/etc/dhcp none bind,auto 0 0
 >```
-- create the export paths, reload the Daemon and mount everything in fstab
+- create the export paths, reload the Daemon and mount everything in fstab using `mount -a`
 ```Bash
 # mkdir -p /exports/var/lib/dhcpd /exports/etc/dhcp
 # systemctl daemon-reload
@@ -421,7 +424,7 @@ LABEL discovery
 ```Bash
 # cd /etc/bind
 # tsig-keygen >> omapi.key
-ls
+# ls
 ```
 > we should see the generated key: `002+57454.private`
 
