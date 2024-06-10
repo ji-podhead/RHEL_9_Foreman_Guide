@@ -94,11 +94,11 @@
 >
 > <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/foreman_nestedVM_failed.png?raw=true" align="center" height="200" />
 
-- Therefore these procedures have to get accomplished:
+- ***Therefore these procedures have to get accomplished:***
 	- 1.  [Configuring an external DHCP server to use with Foreman server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#configuring-an-external-dhcp-server_foreman)
     
 	- 2.  [Configuring Foreman server with an external DHCP server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#Configuring_Server_with_an_External_DHCP_Server_foreman)
-- both procedures will be covered in this  guide
+> - *both procedures will be covered in this  guide*
 - I was to lazy and directly installed the external servers on my Proxmox-Machine, which is stupid:
 	- DNS holds a huge risk when misconfigured or attacked
 	- if your DNS starves, it will also starve all your Proxmox-stuff and might even damage the Filesystem 
@@ -560,6 +560,8 @@ reload the daemon and mount:
 > dont worry if you get a warining like this if you have additional stuff in the fstab like root fs:
 > - `mount: 0: der Einhängepunkt ist nicht vorhanden.`
 
+---
+
 if it fails you can debug like this:
 ```bash
 # mount -t nfs 192.168.122.7:/exports/etc/dhcp /mnt/nfs/etc/dhcp 
@@ -571,13 +573,16 @@ if it fails you can debug like this:
 >dhclient.conf  dhclient-exit-hooks.d   dhcpd.conf   Komapi_key.+002+57454.private  omapi.key  rndc.key
 >```
 >
- - you can also try to disable firewall
+> - you can also try to disable firewall
 >```
 > # sudo sytsemctl disable firewalld
 >```
 >
 
-check the shared leases
+---
+
+***ceck the shared leases and dhcpd.conf***
+
 ```bash
 # ls /mnt/nfs/var/lib/dhcpd
 ```
