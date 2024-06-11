@@ -155,6 +155,7 @@
 ### edit your configs accordingly:
 
 ***named.conf***
+
 > `/etc/bind/named.conf`
 
 ```yaml
@@ -166,7 +167,9 @@ include "/etc/bind/named.conf.default-zones";
 ---
 
 ***named.conf.local***
+
 > `/etc/bind/named.conf.local`
+
 ```yaml
 include "/etc/bind/rndc.conf";
 controls {
@@ -510,6 +513,7 @@ install nfs and  create the export paths
 # systemctl daemon-reload
 # mount -a
 ```
+
  edit the exports file and activate our nfs
 
 ```Bash
@@ -518,6 +522,7 @@ install nfs and  create the export paths
 ```
 
 > the exports file should look like this:
+
 > ```yaml
 >/exports 192.168.192.20(rw,async,no_root_squash,fsid=0,no_subtree_check)
 >/exports/etc/dhcp 192.168.122.20(ro,async,no_root_squash,no_subtree_check,nohide)
