@@ -615,7 +615,7 @@ if it fails you can debug like this:
 >```
 >
 > - you can also try to disable firewall
->```
+>```bash
 > # sudo sytsemctl disable firewalld
 >```
 >
@@ -667,7 +667,7 @@ copy the `rndc.key` from the external machine to the foreman machine
 ```Bash
    nano /etc/rndc.key
 ```
->```
+>```yaml
 >key "rndc-key" {
 >        algorithm hmac-sha256;
  >       secret "VsU3++3blrsWTODlA2AzToXebHMOa96ysmWzq3Q0LiA=";
