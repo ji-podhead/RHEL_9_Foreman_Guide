@@ -15,7 +15,7 @@
 ## *Foreman in a nested VM* managing external DNS & DHCP with Dynamic Updates using RNDC key
 > - we will install & configure a Foreman-machine running inside a `Rocky Linux`-based VM
 > - we will install & configure our DHCP & DNS in `a seperate Debian-based VM`
-> - we will configure our DHCP to get managed by Foreman and `share its leases`
+> - we will configure our DHCP to get managed by Foreman and `share its leases` using dynamic updates and `RNDC-key`
 > - we will configure Foreman to `manage our external DHCP and DNS`
 > - this Guide will also cover how to `debug your servers` and monitor the network 
 > - in addition the Guide provides a `walk trough the Discovery process`   
@@ -109,21 +109,20 @@
 - create a seperate `debian-based` machine 
 - setup your `Bind9 DNS` and `ISC-DHCP`
 	- I coulnd get my DHCP on my Foreman Machine to work with the provided Proxmox-NIC
-- we create a `RNDC-key` and set up `dynamic updates` in our DHCP and DNS
+- we create a `RNDC-key` and set up `dynamic updates` in our DHCP and DNS 
 - **Foreman wont register your machines, even if they have a valid tftp connection, unless you share the leases of DHCP!** 
 > otherwise you will get this error in the proxy logs: 
 >```json
->Started POST /api/v2/discovered_hosts/facts
->Finished POST /api/v2/discovered_hosts/facts with 404 (1.07 ms) 
+>// Started POST /api/v2/discovered_hosts/facts
+>// Finished POST /api/v2/discovered_hosts/facts with 404 (1.07 ms) 
 >```
-> and the discovery image will post a  `404` as well:
+> and the discovery image will post a  <mark style="background-color: red;">404</mark> as well:
 >
 > <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/foreman_nestedVM_failed.png?raw=true" align="center" height="200" />
-
-- ***Therefore these procedures have to get accomplished:***
-	- 1.  [Configuring an external DHCP server to use with Foreman server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#configuring-an-external-dhcp-server_foreman)
-    
-	- 2.  [Configuring Foreman server with an external DHCP server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#Configuring_Server_with_an_External_DHCP_Server_foreman)
+>
+> - ***Therefore these procedures have to get accomplished:***
+>  	1.  [Configuring an external DHCP server to use with Foreman server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#configuring-an-external-dhcp-server_foreman)   
+>  	2.  [Configuring Foreman server with an external DHCP server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#Configuring_Server_with_an_External_DHCP_Server_foreman)
 > - *both procedures will be covered in this  guide*
 - I was to lazy and directly installed the external servers on my Proxmox-Machine, which is stupid:
 	- DNS holds a huge risk when misconfigured or attacked
