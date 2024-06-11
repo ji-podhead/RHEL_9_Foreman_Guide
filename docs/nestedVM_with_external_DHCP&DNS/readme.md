@@ -522,11 +522,11 @@ install nfs and  create the export paths
 ```
 
 > the exports file should look like this:
-
-> ```yaml
+>```yaml
 >/exports 192.168.192.20(rw,async,no_root_squash,fsid=0,no_subtree_check)
 >/exports/etc/dhcp 192.168.122.20(ro,async,no_root_squash,no_subtree_check,nohide)
 >/exports/var/lib/dhcpd 192.168.122.20(ro,async,no_root_squash,no_subtree_check,nohide)
+>```
 
 ---
 
