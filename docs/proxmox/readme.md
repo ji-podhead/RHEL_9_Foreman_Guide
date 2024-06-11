@@ -23,7 +23,7 @@
 
 ***add a host-mapping:***
 > - edit /etc/hosts and add a mapping for the proxmox ip, so we can create a self-signed sll cert
-> ```
+> ```yaml
 > ...
 > 192.168.122.1 kvm.mapping.com
 > 192.168.122.166 my.proxmox-server.de
@@ -32,30 +32,30 @@
 ## create a self-signed ssl-cert
  - we need this to configure proxmox-computeresource in foreman
 > - otherwise foreman will give this **error:** ` 
->```
-> ERF42-5577 [Foreman::Exception]: Failed to create Proxmox compute resource: 
-> SSL_read:  unexpected eof while reading (OpenSSL::SSL::SSLError). 
-> Either provided credentials or FQDN is wrong or your server cannot connect to Proxmox due to network issues.
->```
+
+> <mark style="background-color: red;">ERF42-5577 [Foreman::Exception]: Failed to create Proxmox compute resource:</mark> <br>
+> <mark style="background-color: red;">SSL_read:  unexpected eof while reading (OpenSSL::SSL::SSLError). </mark> <br>
+> <mark style="background-color: red;">Either provided credentials or FQDN is wrong or your server cannot connect to Proxmox due to network issues.</mark> <br>
+
   - of course you can use letsencrypt with certmanager/trafik or buy a cert
  -  but thats to much for this tutorial,
  -  so we will just use **openssl** to create the cert with a few lines of code
  
 ***create a private key:***
-```Bash
-# openssl genpkey -algorithm RSA -out private_key.pem
+```bash
+$ openssl genpkey -algorithm RSA -out private_key.pem
 ```
 ***encrypt your private key:***
-```Bash
-# openssl rsa -in private_key.pem -out encrypted_private_key.pem
+```bash
+$ openssl rsa -in private_key.pem -out encrypted_private_key.pem
 ```
 >```
 > writing RSA key
 >```
 
 ***create a csr:***
-```Bash
-# openssl req -new -key private_key.pem -out csr.pe
+```bash
+$ openssl req -new -key private_key.pem -out csr.pe
 ```
 
 >```
@@ -80,8 +80,8 @@
 >```
 
 ***create the self-signed cert using the just created csr:***
-```Bash
- # openssl x509 -req -days 365 -in csr.pem -signkey private_key.pem -out certificate.pem
+```bash
+ $ openssl x509 -req -days 365 -in csr.pem -signkey private_key.pem -out certificate.pem
 ```
 
 >```
@@ -92,8 +92,8 @@
 
 ***check out the files:***
 
-```Bash 
-# ls
+```bash 
+$ ls
 ```
 >```
  > certificate.pem  csr.pem   encrypted_private_key.pem  private_key.pem ...
@@ -108,27 +108,27 @@
 
 ***configure firewall:***
 
-```Bash
-# firewall-cmd --add-port=5900-5930/tcp
-# firewall-cmd --add-port=5900-5930/tcp --permanent
+```bash
+$ firewall-cmd --add-port=5900-5930/tcp
+$ firewall-cmd --add-port=5900-5930/tcp --permanent
 ```
 
 ***install [foreman_fog_proxmox](https://github.com/theforeman/foreman_fog_proxmox):***
 
-```Bash
-# sudo dnf install rubygem-foreman_fog_proxmox
+```bash
+$ sudo dnf install rubygem-foreman_fog_proxmox
 ```
 
 ***restart foreman service:***
 
-```Bash
-# sudo systemctl restart foreman.service
+```bash
+$ sudo systemctl restart foreman.service
 ```
 
 > - if you get error in foreman-ui after that try this:
-> ```Bash
-> # foreman-rake db:migrate
-> # systemctl restart foreman.service 
+> ```bash
+> $ foreman-rake db:migrate
+> $ systemctl restart foreman.service 
 >```
 
 ***add the proxmox-computeresource:***
