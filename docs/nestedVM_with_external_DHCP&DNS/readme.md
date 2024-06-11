@@ -5,6 +5,10 @@
 
 
 
+
+
+
+
 ## *Foreman in a nested VM* managing external DNS & DHCP with Dynamic Updates using RNDC key
 > - we will install & configure a Foreman-machine running inside a `Rocky Linux`-based VM
 > - we will install & configure our DHCP & DNS in `a seperate Debian-based VM`
@@ -82,6 +86,7 @@
 </div>
 
 
+
 ---
 
  ***Please proceed with the DNS section of my [DNS-Network Guide](https://ji-podhead.github.io/Network-Guides/DNS/install/) if needed:***
@@ -104,16 +109,17 @@
 - we create a `RNDC-key` and set up `dynamic updates` in our DHCP and DNS 
 - **Foreman wont register your machines, even if they have a valid tftp connection, unless you share the leases of DHCP!** 
 > otherwise you will get this error in the proxy logs: 
->  <br> <mark style="background-color: red;">Started POST /api/v2/discovered_hosts/facts</mark> 
->  <br> <mark style="background-color: red;">Finished POST /api/v2/discovered_hosts/facts with 404</mark><br>
+>```json
+>// Started POST /api/v2/discovered_hosts/facts
+>// Finished POST /api/v2/discovered_hosts/facts with 404 (1.07 ms) 
+>```
 > and the discovery image will post a  <mark style="background-color: red;">404</mark> as well:
 >
 > <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/foreman_nestedVM_failed.png?raw=true" align="center" height="200" />
 >
 > - ***Therefore these procedures have to get accomplished:***
->   
->   1.  [Configuring an external DHCP server to use with Foreman server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#configuring-an-external-dhcp-server_foreman)
->   2.  [Configuring Foreman server with an external DHCP server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#Configuring_Server_with_an_External_DHCP_Server_foreman)
+>  	1.  [Configuring an external DHCP server to use with Foreman server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#configuring-an-external-dhcp-server_foreman)   
+>  	2.  [Configuring Foreman server with an external DHCP server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#Configuring_Server_with_an_External_DHCP_Server_foreman)
 > - *both procedures will be covered in this  guide*
 - I was to lazy and directly installed the external servers on my Proxmox-Machine, which is stupid:
 	- DNS holds a huge risk when misconfigured or attacked
@@ -331,9 +337,7 @@ subnet 192.168.122.0 netmask 255.255.255.0 {
 
 ***Always make sure to update Bind9 when changing configs!!!***
 
-**edit AppArmor** 
-
-> - <u>*if you fail to restart isc-dhcp*</u>
+**edit AppArmor**  - <u>*if you fail to restart isc-dhcp*</u>
  
 ```Bash
 # sudo nano /etc/apparmor.d/usr.sbin.dhcpd  
@@ -451,7 +455,7 @@ LABEL discovery
   #  sudo usermod -u 982 -g 982 foreman 
   ```
 > user and group can be found out via foreman-machine like this:
->```
+>```bash
 ># id -u foreman
 ># id -g foreman
 >```
@@ -529,14 +533,14 @@ install nfs and  create the export paths
 ```
 
 > alternatively you can use TSIG for hmac-sha256 encryption keys
->```
+>```bash
 ># tsig-keygen >> omapi.key
 >```
 
 
 - print the generated file: `002+57454.private`
 
-```
+```bash
  cat Komapi_key.+002+57454.private
 ```
 
@@ -580,7 +584,7 @@ Follow the procedure described in the [Foreman Doc's](https://docs.theforeman.or
 
 edit `/etc/fstab`
 
->```
+>```yaml
 >192.168.122.7:/exports/etc/dhcp /mnt/nfs/etc/dhcp
 >ro,vers=3,auto,nosharecache,context="system_u:object_r:dhcp_etc_t:s0" 0 0
 >
@@ -605,7 +609,7 @@ if it fails you can debug like this:
 # cd /mnt/nfs/etc/dhcp
 # ls
 ```
->```json
+>```yaml
 >debug          dhclient-enter-hooks.d  dhcpd6.conf  Komapi_key.+002+57454.key      old.conf   rndc.conf
 >dhclient.conf  dhclient-exit-hooks.d   dhcpd.conf   Komapi_key.+002+57454.private  omapi.key  rndc.key
 >```
@@ -623,7 +627,7 @@ if it fails you can debug like this:
 ```bash
 # ls /mnt/nfs/var/lib/dhcpd
 ```
->```
+>```yaml
 >dhcpd6.leases  dhcpd6.leases~  dhcpd.leases  dhcpd.leases~
 >```
 
@@ -637,7 +641,7 @@ check if the user has access to the files
 bash-5.1$ cat /mnt/nfs/etc/dhcp/dhcpd.conf
 ```
 
->```
+>```yaml
 >authoritative;
 >default-lease-time 14400;
 >max-lease-time 18000;
@@ -649,7 +653,7 @@ bash-5.1$ cat /mnt/nfs/etc/dhcp/dhcpd.conf
 bash-5.1$  cat /mnt/nfs/var/lib/dhcpd/dhcpd.leases
 ```
 
->```
+>```yaml
 ># The format of this file is documented in the dhcpd.leases(5) manual page.
 ># This lease file was written by isc-dhcp-4.4.3-P1
 >...
