@@ -21,69 +21,61 @@
 > - in addition the Guide provides a `walk trough the Discovery process`   
 
 ---
+
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
-<body>
-<div class="container">
-    <div class="column">
-        <div class="header">Specs used in this Guide</div>
-        <div class="row">
-            <div class="cell">Foreman-Machine-OS</div>
-            <div class="cell">Rocky Linux 9.4</div>
-        </div>
-        <div class="row">
-            <div class="cell">DHCP & DNS-Machine-OS</div>
-            <div class="cell">Debian 12</div>
-        </div>
-        <div class="row">
-            <div class="cell">Host</div>
-            <div class="cell">192.168.122.1</div>
-        </div>
-        <div class="row">
-            <div class="cell">PXE-Test-Machine</div>
-            <div class="cell">192.169.122.138</div>
-        </div>
-        <div class="row">
-            <div class="cell">Foreman-Proxy</div>
-            <div class="cell">192.168.122.20</div>
-        </div>
-        <div class="row">
-            <div class="cell">Foreman-FQDN</div>
-            <div class="cell">foreman.de</div>
-        </div>
-        <div class="row">
-            <div class="cell">DNS & THCP-Server</div>
-            <div class="cell">192.168.122.7</div>
-        </div>
-        <div class="row">
-            <div class="cell">Subnet</div>
-            <div class="cell">Adress: 192.168.122.0</div>
-        </div>
-        <div class="row">
-            <div class="cell">Range</div>
-            <div class="cell">192.168.122.1 192.168.122.254</div>
-        </div>
-        <div class="row">
-            <div class="cell">Option routers</div>
-            <div class="cell">192.168.122.7</div>
-        </div>
-        <div class="row">
-            <div class="cell">Option broadcast-address</div>
-            <div class="cell">192.168.122.255</div>
-        </div>
-    </div>
-    <div class="column">
-        <h3>Preview</h3>
-        <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP%DNDNS/images/final_discovery_nestedv_flowchart.png?raw=true" />
-    </div>
+<div>
+<table style="border-collapse: collapse; width: 100%;">
+    <tr>
+        <td style="width: 50%; vertical-align: top;">
+            <table>
+                <tr>
+                    <th colspan="2" style="background-color: #f0f0f0; text-align: center;">Specs used in this Guide</th>
+                </tr>
+                <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Foreman-Machine-OS</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Rocky Linux 9.4</td>
+                        <tr>
+		    <tr>
+		   <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">DHCP & DNS-Machine-OS</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Debian 12</td>
+                        <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Host</td>
+                    <td style="padding: 8px; border: 1px solid #ddd;">192.168.122.1</td>
+                        <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">PXE-Test-Machine</td>
+                 <td style="padding: 8px; border: 1px solid #ddd;">192.169.122.138</td>
+                         </tr>
+                             <tr>
+                     <td style="padding: 8px; border: 1px solid #ddd;">Foreman-Proxy</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">192.168.122.20 </td>
+                        </tr>
+                            <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">Foreman-FQDN</td>
+                <td style="padding: 8px; border: 1px solid #ddd;">foreman.de </td>
+                        <tr>
+                    <td style="padding: 8px; border: 1px solid #ddd;">DNS & THCP-Server</td>
+                <td style="padding: 8px; border: 1px solid #ddd;"> 192.168.122.7</td>
+                    </tr>
+                </tr>
+		    <th colspan="2" style="background-color: #f0f0f0; text-align: center;">Subnet</th>
+			    <tr><td>adress<td>192.168.122.0</td></tr> 
+			    <tr><td>range</td><td>192.168.122.1 192.168.122.254</td></tr>
+			    <tr><td>option routers</td><td> 192.168.122.7</td></tr> 
+			    <tr><td>option broadcast-address</td><td>192.168.122.255</td></tr>
+			    </td>
+                </tr>
+            </table>
+        </td>
+        <td style="width: 50%; vertical-align: top;">
+            <h3>Preview</h3>
+            <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/final_discovery_nestedv_flowchart.png?raw=true" align="center" width="500" />
+        </td>
+    </tr>
+</table>
 </div>
-</body>
 </html>
-
 
 ---
 
