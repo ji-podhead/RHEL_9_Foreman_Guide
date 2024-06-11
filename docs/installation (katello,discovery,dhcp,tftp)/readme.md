@@ -21,7 +21,7 @@
 >       - img (dd, gparted)
 >       - rsync (standalone, or better: ***rsnapshot***)
 > - we use `Rocky Linux 9.4` in this example
-> ***Please proceed with the DNS section of my [DNS-Network Guide](https://ji-podhead.github.io/Network-Guides/DNS/install/) if needed:***
+> - ***Please proceed with the DNS section of my [DNS-Network Guide](https://ji-podhead.github.io/Network-Guides/DNS/install/) if needed:***
 >	- All DNS-related topics needed are explained in detail here:
 
 
