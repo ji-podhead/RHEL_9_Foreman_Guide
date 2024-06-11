@@ -7,7 +7,49 @@
  | [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge%20base)| [Install](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp)) | [Discovery and Provisioning](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning) | [libvirt](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/libvirt) | [proxmox](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/proxmox) | [external DNS&DHCP](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/nestedVM_with_external_DHCP%26DNS)| [diskless pxe-boot using zfs](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/diskless_pxe_using_zfs) |
 
 
-## *Foreman in a nested VM* managing external DNS & DHCP with Dynamic Updates & RNDC
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Table Example</title>
+    <!-- Link to your compiled CSS file -->
+    <link rel="stylesheet" href="/path/to/your/css/table.css">
+</head>
+<body>
+
+<div class="table">
+    <div class="tbl-col-group">
+        <div class="tbl-col">Column 1</div>
+        <div class="tbl-col">Column 2</div>
+        <div class="tbl-col">Column 3</div>
+        <div class="tbl-col">Column 4</div>
+    </div>
+    <div class="tbl-header">
+        <div class="tbl-row">
+            <div class="tbl-cell">Header 1</div>
+            <div class="tbl-cell">Header 2</div>
+            <div class="tbl-cell">Header 3</div>
+            <div class="tbl-cell">Header 4</div>
+        </div>
+    </div>
+    <div class="tbl-body">
+        <div class="tbl-row">
+            <div class="tbl-cell">Data 1</div>
+            <div class="tbl-cell">Data 2</div>
+            <div class="tbl-cell">Data 3</div>
+            <div class="tbl-cell">Data 4</div>
+        </div>
+        <!-- Add more rows as needed -->
+    </div>
+</div>
+
+</body>
+</html>
+
+
+
+## *Foreman in a nested VM* managing external DNS & DHCP with Dynamic Updates using RNDC key
 > - we will install & configure a Foreman-machine running inside a `Rocky Linux`-based VM
 > - we will install & configure our DHCP & DNS in `a seperate Debian-based VM`
 > - we will configure our DHCP to get managed by Foreman and `share its leases`
