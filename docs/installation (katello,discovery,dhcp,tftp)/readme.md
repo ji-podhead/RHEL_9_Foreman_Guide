@@ -37,10 +37,10 @@ $ su root
 ***get your  NIC's IP and Name:***
 
 ```bash
-# ifconfig
+$ ifconfig
 ```
 
->```yaml
+>```
 > enp2s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 >       inet 192.168.2.100  netmask 255.255.255.0  broadcast 192.168.2.255
 >```.
@@ -56,16 +56,17 @@ $ su root
 	- we find the connected DNS IP and ask the server for its Domain-name using `nslookup`
 		- you can also use `dig`  instead of nslookup
  ```bash
- # nmcli device show enp2s0 | grep IP4.DNS
+ $ nmcli device show enp2s0 | grep IP4.DNS
  ```
-> ```yaml
+> ```l
 > # 									DNS-Server-IP:
 > IP4.DNS[1]:                             192.168.2.1
 > ```
+
 ```bash
-# nslookup 192.168.2.1
+$ nslookup 192.168.2.1
  ```
->```yaml
+>```
 > 1.2.168.192.in-addr.arpa	name = speedport.ip.
 > ```
 - you can also check in the `/etc/resolv.conf`
@@ -76,6 +77,7 @@ $ su root
 > nameserver 192.168.2.1
 > nameserver fe80::1%enp2s0
 >```
+
 ***edit the hosts file***
  
 - edit `/etc/hosts`
@@ -87,19 +89,20 @@ $ su root
 
 192.168.2.100 my_hostname.speedport.ip
 ```
+
 ***firewall settings:***
 
 ```bash
-# firewall-cmd --add-port="5646/tcp"
+$ firewall-cmd --add-port="5646/tcp"
 ```
 ```bash
-# firewall-cmd \
+$ firewall-cmd \
 --add-port="5647/tcp" \
 --add-port="8000/tcp" \
 --add-port="9090/tcp"
 ```
 ```bash
-# firewall-cmd \
+$ firewall-cmd \
 --add-service=dns \
 --add-service=dhcp \
 --add-service=tftp \
@@ -109,11 +112,11 @@ $ su root
 ```
 
 ```bash
-# firewall-cmd --runtime-to-permanent
+$ firewall-cmd --runtime-to-permanent
 ```
  > ***>> check if it works <<***
  >```bash
- ># firewall-cmd --list-all
+ >$ firewall-cmd --list-all
  >```
  >```yaml
  >...
@@ -128,9 +131,9 @@ $ su root
 ***get the repos***
 
 ```bash
-# dnf install https://yum.theforeman.org/releases/3.10/el9/x86_64/foreman-release.rpm
-# dnf install https://yum.theforeman.org/katello/4.12/katello/el9/x86_64/katello-repos-latest.rpm
-# dnf install https://yum.puppet.com/puppet7-release-el-9.noarch.rpm
+$ dnf install https://yum.theforeman.org/releases/3.10/el9/x86_64/foreman-release.rpm
+$ dnf install https://yum.theforeman.org/katello/4.12/katello/el9/x86_64/katello-repos-latest.rpm
+$ dnf install https://yum.puppet.com/puppet7-release-el-9.noarch.rpm
 ```
 
 
@@ -140,22 +143,23 @@ $ su root
 ***install  foreman 3.10 with katello plugin***
 
 ```bash
-# dnf update
-# dnf install foreman-installer-katello
-# foreman-installer --scenario katello
+$ dnf update
+$ dnf install foreman-installer-katello
+$ foreman-installer --scenario katello
 ```
-```yaml
-...
-  Success!
-  * Foreman is running at https://my_hostname.speedport.ip
-      Initial credentials are admin / <pass>
-  * To install an additional Foreman proxy on separate machine continue by running:
+>```
+>...
+>  Success!
+>  * Foreman is running at https://my_hostname.speedport.ip
+>      Initial credentials are admin / <pass>
+>  * To install an additional Foreman proxy on separate machine continue by running:
+>
+>      foreman-proxy-certs-generate --foreman-proxy-fqdn "$FOREMAN_PROXY" --certs-tar "/root/$FOREMAN_PROXY-certs.tar.gz"
+>  * Foreman Proxy is running at https://my_hostname.speedport.ip:9090
+>
+>The full log is at /var/log/foreman-installer/katello.log
+>```
 
-      foreman-proxy-certs-generate --foreman-proxy-fqdn "$FOREMAN_PROXY" --certs-tar "/root/$FOREMAN_PROXY-certs.tar.gz"
-  * Foreman Proxy is running at https://my_hostname.speedport.ip:9090
-
-The full log is at /var/log/foreman-installer/katello.log
-```
 ---
 
 > **we connect to foreman dashboard by using**
@@ -168,27 +172,28 @@ The full log is at /var/log/foreman-installer/katello.log
 ---
 ***install the Discovery Plugin***
 ```bash
-# foreman-installer --enable-foreman-plugin-discovery
+$ foreman-installer --enable-foreman-plugin-discovery
 ```
-```yaml
-...
-  Success!
-  * Foreman is running at https://my_hostname.speedport.ip
-  * To install an additional Foreman proxy on separate machine continue by running:
-
-      foreman-proxy-certs-generate --foreman-proxy-fqdn "$FOREMAN_PROXY" --certs-tar "/root/$FOREMAN_PROXY-certs.tar.gz"
-  * Foreman Proxy is running at https://my_hostname.speedport.ip:9090
-
-The full log is at /var/log/foreman-installer/katello.log
-```
+>```
+>...
+>  Success!
+>  * Foreman is running at https://my_hostname.speedport.ip
+>  * To install an additional Foreman proxy on separate machine continue by running:
+>
+>      foreman-proxy-certs-generate --foreman-proxy-fqdn "$FOREMAN_PROXY" --certs-tar "/root/$FOREMAN_PROXY-certs.tar.gz"
+>  * Foreman Proxy is running at https://my_hostname.speedport.ip:9090
+>
+>The full log is at /var/log/foreman-installer/katello.log
+>```
 
 ---
 
 > ***>> check if it worked <<***
+
 > ```bash
-> # dnf repolist enabled
+> $ dnf repolist enabled
 >```
-> ```yaml
+> ```
 > ...
 > foreman                   Foreman 3.10
 > foreman-plugins           Foreman plugins 3.10
@@ -200,20 +205,20 @@ The full log is at /var/log/foreman-installer/katello.log
 ---
 > ****(optional)* delete old/wrong repo:***
 > - edit the foreman.repo file and remove the flawed ones:
-> ```bash
-> # dnf clean all
-> # dnf install nano
-> # sudo nano /etc/yum.repos.d/foreman.repo
-> # sudo dnf clean all
-> # sudo dnf makecache
-> ```
+>```bash
+>$ dnf clean all
+>$ dnf install nano
+>$ sudo nano /etc/yum.repos.d/foreman.repo
+>$ sudo dnf clean all
+>$ sudo dnf makecache
+>```
 
 ## DHCP 
 
 ***Install:***
 
 ```bash
-# dnf install dhcp-server -y
+$ dnf install dhcp-server -y
 ```
 
 ***Config:***
@@ -224,33 +229,33 @@ The full log is at /var/log/foreman-installer/katello.log
   - our subnetmask is `255.255.255.0`, hence our CIDR is  `24`
   
 ```bash 
-# sudo nano /etc/dhcp/dhcpd.conf
+$ sudo nano /etc/dhcp/dhcpd.conf
 ```
-> ```yaml 
+>```yaml 
 > ...
 > # speedport.ip
 >subnet 192.168.2.0 netmask 255.255.255.0 {
- > pool
+> pool
 >  {
 >    range 192.168.2.101 192.168.2.200;
 >  }
 >  option subnet-mask 255.255.255.0;
 >  option routers 192.168.2.100;
 >}
-> ```
+>```
 
 - Now we can enable the dhcp service
 	-  if this this fails you most likely have wrong subnet or firewall settings
- > ```bash
- > # sudo systemctl enable --now dhcpd
->```
+ >```bash
+ >$ sudo systemctl enable --now dhcpd
+ >```
 
  > ****(optional)* check if dhcp server is already installed and running***
 >```bash
-> # nmap -sU 127.0.0.1 -p 67
-> ```
+>$ nmap -sU 127.0.0.1 -p 67
+>```
 > 
->  ```yaml
+>```yaml
 >  # if  its not installed or not running:
 > ...
 > PORT   STATE  SERVICE
@@ -272,7 +277,7 @@ The full log is at /var/log/foreman-installer/katello.log
 ***install***
 
 ```bash
-# sudo dnf install tftp-server -y
+$ sudo dnf install tftp-server -y
 ```
 
 ***check if Discovery-Plugin created the Boot-image Files:***
@@ -282,7 +287,7 @@ The full log is at /var/log/foreman-installer/katello.log
    -  the **user has to be nobody** (system-user) and it should be **fully writable**
    
  ```bash
- #  nano /var/lib/tftpboot/pxelinux.cfg/default
+ $  nano /var/lib/tftpboot/pxelinux.cfg/default
    ```
    
 >```yaml
@@ -296,8 +301,8 @@ The full log is at /var/log/foreman-installer/katello.log
 > ```
 
 ```bash
-# sudo chmod -R 777 /var/lib/tftpboot
-# sudo chown -R nobody: /var/lib/tftpboot
+$ sudo chmod -R 777 /var/lib/tftpboot
+$ sudo chown -R nobody: /var/lib/tftpboot
 ```
    - Change tftpboot dir if required:
 
@@ -320,7 +325,7 @@ $ nano /usr/lib/systemd/system/tftp.service
 - not sure if this was required:
   
 >```bash
-> sudo nano /etc/xinetd.d/tftp
+>$ sudo nano /etc/xinetd.d/tftp
 >```
 
 >```yaml
@@ -344,15 +349,15 @@ $ nano /usr/lib/systemd/system/tftp.service
 -  tftp service can be activated by `using systemctl enable tftp` (not xintetd)!
 
 >```bash
-> # systemctl enable tftp
+> $ systemctl enable tftp
 >```
 - you can check the realtime-logs like this:
 
 ```bash
-# journalctl -u tftp -f
+$ journalctl -u tftp -f
 ```
 
->```yaml
+>```
 > Mai 24 19:26:15 <user> in.tftpd[26138]: Client ::ffff:192.168.2.104 finished boot/rocky-linux-imLv796i67R9-initrd.img
 > Mai 24 19:41:00 <user> systemd[1]: tftp.service: Deactivated successfully.
 > Mai 26 10:16:08 <user> systemd[1]: Started Tftp Server.
@@ -364,7 +369,7 @@ $ nano /usr/lib/systemd/system/tftp.service
 - we set managed dns to false: `--foreman-proxy-dns-managed false \`
 
 ```bash
-#  foreman-installer \
+$  foreman-installer \
 --foreman-proxy-dns true \
 --foreman-proxy-dns-managed false \
 --foreman-proxy-dhcp true \
