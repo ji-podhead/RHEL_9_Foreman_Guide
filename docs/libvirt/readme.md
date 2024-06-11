@@ -7,71 +7,76 @@
 
 # libvirt
 > - we gonna use root for KVM here,otherwise we need a kvm-user like this:
->  >```Bash
->  ># usermod -a -G libvirt _non_root_user_
+>  >```bash
+>  >$ usermod -a -G libvirt _non_root_user_
 >  >``` 
 >  -  instead we will use this user: `root@kvm.mapping.com`, disable root-ssh login and login via local root password later on
 
 ## install
 
-```Bash
+```$bash
 $ su root
 ```
 
 ***create the folders needed for libvirt and the ssh keys***
 
-```Bash
-# mkdir /usr/share/foreman/.ssh
+```bash
+$ mkdir /usr/share/foreman/.ssh
 ```
 > -  ***the user needs to be foreman and it should be fully writable:***
->```Bash
-># chmod 700 /usr/share/foreman/.ssh
-># chown foreman:foreman /usr/share/foreman/.ssh
+>```bash
+>$ chmod 700 /usr/share/foreman/.ssh
+>$ chown foreman:foreman /usr/share/foreman/.ssh
 >```
 
 -  (not sure if that was required)
 
-> ```Bash
-> # mkdir /usr/share/foreman/.cache
-> # mkdir /usr/share/foreman/.cache/libvirt
-> # mkdir /usr/share/foreman/.cache/libvirt/virsh
-> # chown foreman:foreman /usr/share/foreman/.cache/libvirt/virsh
-> # chmod 700 -R /usr/share/foreman/.cache 
-> # chown foreman:foreman /usr/share/foreman/.cache
+> ```bash
+> $ mkdir /usr/share/foreman/.cache
+> $ mkdir /usr/share/foreman/.cache/libvirt
+> $ mkdir /usr/share/foreman/.cache/libvirt/virsh
+> $ chown foreman:foreman /usr/share/foreman/.cache/libvirt/virsh
+> $ chmod 700 -R /usr/share/foreman/.cache 
+> $ chown foreman:foreman /usr/share/foreman/.cache
 > ```
 
 ***install libvirt:***
-```Bash
-# dnf install qemu-kvm libvirt virt-install virt-viewer
+
+```bash
+$ dnf install qemu-kvm libvirt virt-install virt-viewer
 ```
-```Bash
-# for drv in qemu network nodedev nwfilter secret storage interface; do systemctl start virt${drv}d{,-ro,-admin}.socket; done
+
+```bash
+$ for drv in qemu network nodedev nwfilter secret storage interface; do systemctl start virt${drv}d{,-ro,-admin}.socket; done
 ```
 
 
 ***validate:***
-```Bash
-# virt-host-validate
+```bash
+$ virt-host-validate
 ```
 > -  *If all virt-host-validate checks return a PASS value, your system is prepared for creating VMs.*
 >    - **see the red hat guide [Chapter 2. Enabling virtualization](https://access.redhat.com/documentation/de-de/red_hat_enterprise_linux/9/html/configuring_and_managing_virtualization/assembly_enabling-virtualization-in-rhel-9_configuring-and-managing-virtualization) for troubleshooting**
 
 ***enable and start libvirt:***
- ```Bash
-# systemctl start libvirtd
+ 
+ ```bash
+$ systemctl start libvirtd
 ```
 
  
 - ***install virtmanager: *(optional)****
-```Bash
-# virt-manager
+
+```bash
+$ virt-manager
 ```
 
 **check if the Virtual Bridge 0" interface  was created**
 
 > ![virbr0](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/virbr0_kvm.png?raw=true)
-```Bash
-# ifconfig
+
+```bash
+$ ifconfig
 ```
 >```
 >enp2s0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
@@ -95,7 +100,7 @@ $ su root
 
 ***add a host mapping***
 > - edit the `/etc/hosts` file and add a mapping for our libvirt service
->   ```Bash
+>   ```yaml
 >	  ... 
 >    192.168.2.100 cc.speedport.ip     # NIC`s main Ip used for this mapping - remember we had range of 100 
 >    1192.168.122.1 kvm.mapping.com   # mapping for the virtual NIC we just created called vibr0
@@ -103,7 +108,7 @@ $ su root
 
 
 ***edit `/etc/ssh/sshd_config`:***
->```
+>```yaml
 >...
 >Include /etc/ssh/sshd_config.d/*.conf
 >PermitRootLogin yes
@@ -119,15 +124,15 @@ $ su root
 
 
 ***login to foreman:***
-```Bash
-# su foreman -s /bin/bash
+```bash
+$ su foreman -s /bin/bash
 ```
 ***add ssh key:***
 ```Bash
 bash-5.1$ ssh-keygen
 ```
 ***copy the key `(thats where we need root)`:***
-```Bash
+```bash
 bash-5.1$ ssh-copy-id root@kvm.mapping.com
 ```
 
@@ -140,12 +145,12 @@ bash-5.1$ ssh-copy-id root@kvm.mapping.com
 >```
 
 ***try the ssh connection:***
-```Bash
+```bash
  bash-5.1$ 'root@kvm.mapping.com'
 ```
 
 ***test the kvm-hypervisor connection:***
-```Bash
+```bash
 bash-5.1$ virsh -c qemu+ssh://root@kvm.mapping.com/system
 ```
 >```
@@ -156,7 +161,7 @@ bash-5.1$ virsh -c qemu+ssh://root@kvm.mapping.com/system
 >```
 
 ***exit the shell:***
-```Bash
+```bash
 bash-5.1$ exit
 ```
 
@@ -167,8 +172,8 @@ bash-5.1$ exit
 > ![adding_computeresource](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/add_libvirt_computeresource.png?raw=true) 
 > -	I had to restart my computer at before that because the libvirtd-admin.socket service stopped
 >   > - you can check that by using systemctl:
->   >```Bash
->   >     # systemctl status libvirtd
+>   >```bash
+>   >     $ systemctl status libvirtd
 >   >```
 >   >```
 >   >     ● libvirtd.service - libvirt legacy monolithic daemon
@@ -190,26 +195,26 @@ bash-5.1$ exit
 > The commands you executed are part of the process to create and configure a network bridge on a Linux system. This setup allows virtual machines (VMs) to communicate directly with the physical network, as if they were directly connected to the network via a physical network interface. Here's a comprehensive guide translated into English and formatted in Markdown:
 
 ***Step 1: Create a Network Bridge***
-```Bash
-bash sudo nmcli conn add type bridge con-name br0 ifname br0
+```bash
+$ sudo nmcli conn add type bridge con-name br0 ifname br0
 ```
 > - This command creates a new network bridge named `br0`. A network bridge acts like a virtual switch, connecting multiple network interfaces, allowing traffic to be forwarded from one side of the network to another without passing through the physical device it arrived on.
 
 ***Step 2: Add a Physical Interface as a Slave to the Bridge***
-```Bash
-bash sudo nmcli conn add type ethernet slave-type bridge con-name bridge-br0 ifname enp2s0 master br0
+```bash
+$ sudo nmcli conn add type ethernet slave-type bridge con-name bridge-br0 ifname enp2s0 master br0
 ```
 > - With this command, the physical network interface `enp2s0` is added as a slave to the bridge `br0`. This connects the physical interface with the bridge, routing traffic passing through the bridge over the physical interface `enp2s0`.
 
 ***Step 3: Activate the Bridge***
-```Bash
-bash sudo nmcli conn up br0
+```bash
+$ sudo nmcli conn up br0
 ```
 > - This command activates the bridge `br0`, enabling it to function and forward traffic between connected interfaces.
 
 ***Step 4: Assign an IP Address to the Bridge (Optional)***
-```Bash
-bash sudo nmcli conn modify br0 ipv4.addresses "192.168.200.100/24" ipv4.method manual sudo nmcli conn up br0
+```bash
+$ sudo nmcli conn modify br0 ipv4.addresses "192.168.200.100/24" ipv4.method manual sudo nmcli conn up br0
 ```
 > - These steps are optional and serve to assign a specific IP address to the bridge or virtual machine. In this example, the bridge `br0` is assigned the address `192.168.200.100` within the subnet `192.168.200.0/24`. After assigning the IP address, the bridge is reactivated to ensure the changes take effect.
 
