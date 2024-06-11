@@ -22,8 +22,7 @@
 
 ---
 
-<!DOCTYPE html>
-<html lang="en">
+
 <div>
 <table style="border-collapse: collapse; width: 100%;">
     <tr>
@@ -75,7 +74,7 @@
     </tr>
 </table>
 </div>
-</html>
+
 
 ---
 
