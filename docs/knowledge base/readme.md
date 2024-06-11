@@ -19,6 +19,16 @@
 > In essence, MAAS offers integrated VLAN and subnet management within its environment, whereas Foreman focuses on host provisioning and network configuration, leaving VLAN management to external network administration.
 
 ### DNS
+ ***Please proceed with the DNS section of my [DNS-Network Guide](https://ji-podhead.github.io/Network-Guides/DNS/install/) if needed:***
+ 
+- All DNS-related topics needed are explained in detail here:
+> - [Knowledge Base ](https://ji-podhead.github.io/Network-Guides/DNS/Knowledge%20Base)
+> - [Install & Config](https://ji-podhead.github.io/Network-Guides/DNS/install)
+> - [Test & Debug](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
+> - [Dynamic Updates & RNDC](https://ji-podhead.github.io/Network-Guides/DNS/Dynmaic_Updates_%26_RNDC)
+> - [Attack- Vectors and Scenario](https://ji-podhead.github.io/Network-Guides/DNS/attackVectorsAndScenario)
+> - [Security & Protection](https://ji-podhead.github.io/Network-Guides/DNS/protection)
+
 ![dns](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/dns.png?raw=true)
 
 - [do routers have dns?](https://superuser.com/questions/1715361/do-routers-have-a-dns-server)
