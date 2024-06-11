@@ -529,7 +529,7 @@ install nfs and  create the export paths
 
 ---
 
-***omapi-key***
+***`isc-`omapi-key***
 
 ```bash
  $ cd /etc/bind
