@@ -83,6 +83,7 @@ $ nslookup 192.168.2.1
 - edit `/etc/hosts`
 	-  the Domain for the host mapping should  be:
 		-  <host name+routers domain>
+    
 ```yaml
 127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
 ::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
