@@ -95,9 +95,9 @@
 > - [Knowledge Base ](https://ji-podhead.github.io/Network-Guides/DNS/Knowledge%20Base)
 > - [Install & Config](https://ji-podhead.github.io/Network-Guides/DNS/install)
 > - [Test & Debug](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
+> - [Dynamic Updates & RNDC](https://ji-podhead.github.io/Network-Guides/DNS/Dynmaic_Updates_%26_RNDC)
 > - [Attack- Vectors and Scenario](https://ji-podhead.github.io/Network-Guides/DNS/attackVectorsAndScenario)
 > - [Security & Protection](https://ji-podhead.github.io/Network-Guides/DNS/protection)
-
 
 ---
 
