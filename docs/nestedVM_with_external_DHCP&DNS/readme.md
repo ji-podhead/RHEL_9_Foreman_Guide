@@ -149,17 +149,20 @@
    #  chmod 660 /etc/bind/rndc.conf
    #  chown root:bind /etc/bind/rndc.conf
   ```
+
 ---
 
 ### edit your configs accordingly:
 
 ***named.conf***
 > `/etc/bind/named.conf`
+
 ```yaml
 include "/etc/bind/named.conf.options";
 include "/etc/bind/named.conf.local";
 include "/etc/bind/named.conf.default-zones";
 ```
+
 ---
 
 ***named.conf.local***
@@ -189,7 +192,9 @@ zone "122.168.192.in-addr.arpa" IN {
 ---
 
 ***named.conf.options***
+
 > `/etc/bind/named.conf.options`
+
 ```yaml
 acl internals { 127.0.0.0/8; 192.168.122.0/24; };
 controls { inet 127.0.0.1 port 953 allow { 127.0.0.1; }; };
@@ -212,7 +217,9 @@ options {
 
 
 ***forward-lookup-zone `foreman.de`***
+
 > `/etc/bind/zones/foreman.de`
+
 ```yaml
 ; BIND data file for local loopback interface
 ;
@@ -237,7 +244,9 @@ bindserver      IN      A       192.168.122.20
 ---
 
 ***reverse-lookup-zone `foreman.de.rev`***
+
 > `/etc/bind/zones/foreman.de.rev`
+
 ```yaml
 ; BIND reverse data file for local loopback interface
 ;
@@ -262,7 +271,9 @@ bindserver      IN      A      192.168.122.20
 ---
 
 ***dhcp.conf***
+
 > `/etc/dhcp/dhcpd.conf`
+
 ```yaml
 update-static-leases on;
 use-host-decl-names on;
@@ -328,6 +339,7 @@ subnet 192.168.122.0 netmask 255.255.255.0 {
 ***Always make sure to update Bind9 when changing configs!!!***
 
 **edit AppArmor** 
+
 > - <u>*if you fail to restart isc-dhcp*</u>
  
 ```Bash
@@ -361,10 +373,12 @@ restart AppArmor:
 ---
 
 ## Initialize Foreman with Discovery Plugin
+
 - get the repos, configure firewall...etc
 	- everything you need to know is explained in detail in the [install section of this guide](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp))
 > -  <u>*but dont upgrade foreman to use managed DNS & DHCP  yet!!*</u>
 > - ***set managed DNS & DHCP to false:***
+
 >```Bash
 >foreman-installer \ 
 >--foreman-proxy-dns true \
