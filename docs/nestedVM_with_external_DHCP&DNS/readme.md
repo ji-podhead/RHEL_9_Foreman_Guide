@@ -1,6 +1,3 @@
-* markdown: GFM
-
-
 
 
 
@@ -737,6 +734,8 @@ sudo systemctl restart foreman-proxy
 
 ## Discovery walktrough and debugging
    <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/final_discovery_nestedv_flowchart.png?raw=true" align="center" />
+   
+[Full Image](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/final_discovery_nestedv_flowchart.png?raw=true)  [Complete Logs](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP%26DNS/discovery.log)
 
 ## Debugging
 - `tail /var/logs/foreman/production.log -f`
@@ -744,7 +743,6 @@ sudo systemctl restart foreman-proxy
 - `journalctl -u isc-dhcp-server -f`
 - `sudo journalctl -u tftp`
 - `nslookup <FQDN/ip> <DNS>`
-- [additional debugging steps](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
+- [additional debugging steps with complete description](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
 
-## Successfull Discovery Logs
-- can be found [here](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP%26DNS/discovery.log)
+
