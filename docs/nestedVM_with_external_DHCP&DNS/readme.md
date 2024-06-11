@@ -141,9 +141,9 @@
  - create a RNDC key
   
   ```bash
-     echo rndc-confgen >> /etc/bind/rndc.conf
-     chmod 660 /etc/bind/rndc.conf
-     chown root:bind /etc/bind/rndc.conf
+     $ echo rndc-confgen >> /etc/bind/rndc.conf
+     $ chmod 660 /etc/bind/rndc.conf
+     $ chown root:bind /etc/bind/rndc.conf
   ```
 
 ---
@@ -340,7 +340,7 @@ subnet 192.168.122.0 netmask 255.255.255.0 {
 **edit AppArmor**  - <u>*if you fail to restart isc-dhcp*</u>
  
 ```bash
- sudo nano /etc/apparmor.d/usr.sbin.dhcpd  
+ $ sudo nano /etc/apparmor.d/usr.sbin.dhcpd  
 ```
 
 > add 
@@ -352,18 +352,18 @@ subnet 192.168.122.0 netmask 255.255.255.0 {
 restart AppArmor:
 
 ```bash
- apparmor_parser -r /etc/apparmor.d/usr.sbin.dhcpd  
+ $ apparmor_parser -r /etc/apparmor.d/usr.sbin.dhcpd  
 ```
 
   **restart/refresh DNS & DHCP**
   
 ```Bash
- named-checkzone foreman.de /etc/bind/zones/foreman.de
- named-checkzone foreman.de /etc/bind/zones/foreman.de.rev
- named-checkconf /etc/bind/named.conf.options
- named-checkconf
- sudo systemctl restart bind9
- sudo systemctl restart isc-dhcp-server
+ $ named-checkzone foreman.de /etc/bind/zones/foreman.de
+ $ named-checkzone foreman.de /etc/bind/zones/foreman.de.rev
+ $ named-checkconf /etc/bind/named.conf.options
+ $ named-checkconf
+ $ sudo systemctl restart bind9
+ $ sudo systemctl restart isc-dhcp-server
 ```  
 ´
 
@@ -377,7 +377,7 @@ restart AppArmor:
 > - ***set managed DNS & DHCP to false:***
 
 >```bash
->foreman-installer \ 
+>$ foreman-installer \ 
 >--foreman-proxy-dns true \
 >--foreman-proxy-dns-managed false \ 
 >--foreman-proxy-dhcp true \
@@ -429,44 +429,44 @@ LABEL discovery
  install isc-dhcp-server
 
 ```bash
- apt install isc-dhcp-server -y
+ $ apt install isc-dhcp-server -y
 ```
 
  configure Firewall (debian)
 
 ```bash
- sudo apt-get install iptables-persistent netfilter-persistent
- sudo iptables -A INPUT -p tcp --dport 7911 -j 
- sudo iptables -A INPUT -p tcp --syn --dport 2049 -j 
- sudo iptables -A INPUT -p udp --dport 2049 -j 
- sudo iptables -A INPUT -p tcp --dport 111 -j 
- sudo iptables -A INPUT -p udp --dport 111 -j 
- sudo iptables -A INPUT -p tcp --dport 32765:61000 -j 
- sudo iptables -A INPUT -p udp --dport 32765:61000 -j 
- sudo netfilter-persistent save
- sudo iptables-save > /etc/iptables/rules.v4
- sudo netfilter-persistent reload
+ $ sudo apt-get install iptables-persistent netfilter-persistent
+ $ sudo iptables -A INPUT -p tcp --dport 7911 -j 
+ $ sudo iptables -A INPUT -p tcp --syn --dport 2049 -j 
+ $ sudo iptables -A INPUT -p udp --dport 2049 -j 
+ $ sudo iptables -A INPUT -p tcp --dport 111 -j 
+ $ sudo iptables -A INPUT -p udp --dport 111 -j 
+ $ sudo iptables -A INPUT -p tcp --dport 32765:61000 -j 
+ $ sudo iptables -A INPUT -p udp --dport 32765:61000 -j 
+ $ sudo netfilter-persistent save
+ $ sudo iptables-save > /etc/iptables/rules.v4
+ $ sudo netfilter-persistent reload
 ```
 ---
 
 ***add the Foreman user***
 
 ```bash
-    useradd -u 982 -g 982 -s /sbin/nologin foreman
-    sudo usermod -u 982 -g 982 foreman 
+    $ useradd -u 982 -g 982 -s /sbin/nologin foreman
+    $ sudo usermod -u 982 -g 982 foreman 
   ```
 > user and group can be found out via foreman-machine like this:
 >```bash
-> id -u foreman
-> id -g foreman
+>$  id -u foreman
+>$  id -g foreman
 >```
 
    restore the read and execute flags:
    
 ```bash
-     chmod o+rx /etc/dhcp/
-     chmod o+r /etc/dhcp/dhcpd.conf
-     chattr +i /etc/dhcp/ /etc/dhcp/dhcpd.conf
+     $ chmod o+rx /etc/dhcp/
+     $ chmod o+r /etc/dhcp/dhcpd.conf
+     $ chattr +i /etc/dhcp/ /etc/dhcp/dhcpd.conf
 ```
 
 ---
@@ -477,26 +477,26 @@ LABEL discovery
 install nfs and  create the export paths
 
 ```bash
-   sudo apt-get install nfs-kernel-server
-   systemctl enable --now nfs-server
-   mkdir -p /exports/var/lib/dhcpd /exports/etc/dhcp
+   $ sudo apt-get install nfs-kernel-server
+   $ systemctl enable --now nfs-server
+   $ mkdir -p /exports/var/lib/dhcpd /exports/etc/dhcp
 ```
 
  start the nfs server
  
 ```bash
-  systemctl enable --now nfs-server
+  $ systemctl enable --now nfs-server
  ```
 
 > - you can check the status like this:
 > ```bash
->  sudo systemctl status nfs-kernel-server
+>  $ sudo systemctl status nfs-kernel-server
 >```
 
  edit the fstab for persistent nfs export
 
 ```bash
- nano /etc/fstab
+ $ nano /etc/fstab
 ```
 
 >```yaml
@@ -507,15 +507,15 @@ install nfs and  create the export paths
  reload the Daemon and mount everything in fstab using `mount -a`
 
 ```bash
- systemctl daemon-reload
- mount -a
+ $ systemctl daemon-reload
+ $ mount -a
 ```
 
  edit the exports file and activate our nfs
 
 ```bash
- nano /etc/exports
- exportfs -rva
+ $ nano /etc/exports
+ $ exportfs -rva
 ```
 
 > the exports file should look like this:
@@ -530,21 +530,21 @@ install nfs and  create the export paths
 ***omapi-key***
 
 ```bash
- cd /etc/bind
- ssec-keygen -a DH -b 512 -n HOST omapi_key
- ls
+ $ cd /etc/bind
+ $ ssec-keygen -a DH -b 512 -n HOST omapi_key
+ $ ls
 ```
 
 > alternatively you can use TSIG for hmac-sha256 encryption keys
 >```bash
-> tsig-keygen >> omapi.key
+> $ tsig-keygen >> omapi.key
 >```
 
 
 - print the generated file: `002+57454.private`
 
 ```bash
- cat Komapi_key.+002+57454.private
+ $ cat Komapi_key.+002+57454.private
 ```
 
 
@@ -563,7 +563,7 @@ install nfs and  create the export paths
  start the dhcp server
 
 ```bash
- systemctl enable --now dhcpd
+ $ systemctl enable --now dhcpd
 ```
 
 
@@ -578,11 +578,11 @@ install nfs and  create the export paths
 Follow the procedure described in the [Foreman Doc's](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#Configuring_Server_with_an_External_DHCP_Server_foreman)
 
 ```bash
- sudo dnf install nfs-common
- mkdir -p /mnt/nfs/etc/dhcp /mnt/nfs/var/lib/dhcpd
- chown -R foreman-proxy /mnt/nfs
- showmount -e foreman.de
- rpcinfo -p foreman.de
+ $ sudo dnf install nfs-common
+ $ mkdir -p /mnt/nfs/etc/dhcp /mnt/nfs/var/lib/dhcpd
+ $ chown -R foreman-proxy /mnt/nfs
+ $ showmount -e foreman.de
+ $ rpcinfo -p foreman.de
 ```
 
 edit `/etc/fstab`
@@ -598,8 +598,8 @@ edit `/etc/fstab`
 reload the daemon and mount:
 
 ```bash
- systemctl daemon-reload
- mount -a
+ $ systemctl daemon-reload
+ $ mount -a
 ```
 > dont worry if you get a warining like this if you have additional stuff in the fstab like root fs:
 > - `mount: 0: der Einhängepunkt ist nicht vorhanden.`
@@ -608,18 +608,18 @@ reload the daemon and mount:
 
 if it fails you can debug like this:
 ```bash
- mount -t nfs 192.168.122.7:/exports/etc/dhcp /mnt/nfs/etc/dhcp 
- cd /mnt/nfs/etc/dhcp
- ls
+ $ mount -t nfs 192.168.122.7:/exports/etc/dhcp /mnt/nfs/etc/dhcp 
+ $ cd /mnt/nfs/etc/dhcp
+ $ ls
 ```
->```yaml
+>```
 >debug          dhclient-enter-hooks.d  dhcpd6.conf  Komapi_key.+002+57454.key      old.conf   rndc.conf
 >dhclient.conf  dhclient-exit-hooks.d   dhcpd.conf   Komapi_key.+002+57454.private  omapi.key  rndc.key
 >```
 >
 > - you can also try to disable firewall
 >```bash
-> # sudo sytsemctl disable firewalld
+> $  sudo sytsemctl disable firewalld
 >```
 >
 
@@ -628,15 +628,15 @@ if it fails you can debug like this:
 ***check the shared leases and dhcpd.conf***
 
 ```bash
- ls /mnt/nfs/var/lib/dhcpd
+ $ ls /mnt/nfs/var/lib/dhcpd
 ```
->```yaml
+>```
 >dhcpd6.leases  dhcpd6.leases~  dhcpd.leases  dhcpd.leases~
 >```
 
 login to foreman-proxy user
 ```bash
-  su foreman-proxy -s /bin/bash
+  $ su foreman-proxy -s /bin/bash
 ```
 check if the user has access to the files
 
@@ -644,7 +644,7 @@ check if the user has access to the files
 bash-5.1$ cat /mnt/nfs/etc/dhcp/dhcpd.conf
 ```
 
->```yaml
+>```
 >authoritative;
 >default-lease-time 14400;
 >max-lease-time 18000;
@@ -656,7 +656,7 @@ bash-5.1$ cat /mnt/nfs/etc/dhcp/dhcpd.conf
 bash-5.1$  cat /mnt/nfs/var/lib/dhcpd/dhcpd.leases
 ```
 
->```yaml
+>```
 ># The format of this file is documented in the dhcpd.leases(5) manual page.
 ># This lease file was written by isc-dhcp-4.4.3-P1
 >...
@@ -670,7 +670,7 @@ follow the procedure  from the [API Doc’s](https://docs.theforeman.org/nightly
 copy the `rndc.key` from the external machine to the foreman machine
 
 ```bash
-   nano /etc/rndc.key
+   $ nano /etc/rndc.key
 ```
 >```yaml
 >key "rndc-key" {
@@ -680,10 +680,10 @@ copy the `rndc.key` from the external machine to the foreman machine
 >```
 
 ```bash
-     restorecon -v /etc/rndc.key
-     chown -v root:named /etc/rndc.key
-     chmod -v 640 /etc/rndc.key
-     usermod -a -G named foreman-proxy
+     $ restorecon -v /etc/rndc.key
+     $ chown -v root:named /etc/rndc.key
+     $ chmod -v 640 /etc/rndc.key
+     $ usermod -a -G named foreman-proxy
 ```
 ---
 
@@ -695,7 +695,7 @@ copy the `rndc.key` from the external machine to the foreman machine
 ***external DNS&DHCP-Management Upgrade***
 
 ```bash
-  foreman-installer \ 
+  $ foreman-installer \ 
   --foreman-proxy-dns true \
   --foreman-proxy-dns-managed true \
   --foreman-proxy-dns-provider=nsupdate \
@@ -717,7 +717,7 @@ copy the `rndc.key` from the external machine to the foreman machine
 ***remote-isc-key Upgrade***
 
 ```bash
-foreman-installer \
+$ foreman-installer \
 --enable-foreman-proxy-plugin-dhcp-remote-isc \
 --foreman-proxy-dhcp-provider=remote_isc \
 --foreman-proxy-dhcp-server=foreman.de \
@@ -732,7 +732,7 @@ foreman-installer \
 restart foreman-proxy just in case
 
 ```bash
-sudo systemctl restart foreman-proxy
+$ sudo systemctl restart foreman-proxy
 ```
 ---
 
