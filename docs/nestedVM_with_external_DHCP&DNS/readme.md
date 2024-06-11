@@ -1,7 +1,7 @@
 
 
 
- | [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge%20base)| [Install](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp)) | [Discovery and Provisioning](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning) | [libvirt](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/libvirt) | [proxmox](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/proxmox) | [external DNS&DHCP](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/nestedVM_with_external_DHCP%26DNS)| [diskless pxe-boot using zfs](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/diskless_pxe_using_zfs) |
+ | [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge%20base)| [Install](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp)) | [Discovery and Provisioning](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning) | [libvirt](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/libvirt) | [proxmox](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/proxmox) | [external DNS&DHCP](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/nestedVM_with_external_DHCP%26DNS) | [diskless pxe-boot using zfs](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/diskless_pxe_using_zfs) |
 
 
 
@@ -664,15 +664,17 @@ bash-5.1$  cat /mnt/nfs/var/lib/dhcpd/dhcpd.leases
 ---
 
 ***external DNS config***
+
 follow the procedure  from the [API Doc’s](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#configuring-external-services)
 copy the `rndc.key` from the external machine to the foreman machine
+
 ```Bash
    nano /etc/rndc.key
 ```
 >```yaml
 >key "rndc-key" {
 >        algorithm hmac-sha256;
- >       secret "VsU3++3blrsWTODlA2AzToXebHMOa96ysmWzq3Q0LiA=";
+>       secret "VsU3++3blrsWTODlA2AzToXebHMOa96ysmWzq3Q0LiA=";
 >};
 >```
 
@@ -746,3 +748,7 @@ sudo systemctl restart foreman-proxy
 - [additional debugging steps with complete description](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
 
 
+---
+
+
+ | [Knowledge Base](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/knowledge%20base)| [Install](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/installation%20(katello%2Cdiscovery%2Cdhcp%2Ctftp)) | [Discovery and Provisioning](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning) | [libvirt](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/libvirt) | [proxmox](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/proxmox) | [external DNS&DHCP](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/nestedVM_with_external_DHCP%26DNS) | [diskless pxe-boot using zfs](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/diskless_pxe_using_zfs) |
