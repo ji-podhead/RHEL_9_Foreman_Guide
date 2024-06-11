@@ -139,7 +139,7 @@
 
 ## DHCP & DNS configs for Dynamic Updates & RNDC
  - create a RNDC key
-  ```Bash
+  ```bash
    #  echo rndc-confgen >> /etc/bind/rndc.conf
    #  chmod 660 /etc/bind/rndc.conf
    #  chown root:bind /etc/bind/rndc.conf
@@ -338,7 +338,7 @@ subnet 192.168.122.0 netmask 255.255.255.0 {
 
 **edit AppArmor**  - <u>*if you fail to restart isc-dhcp*</u>
  
-```Bash
+```bash
 # sudo nano /etc/apparmor.d/usr.sbin.dhcpd  
 ```
 
@@ -350,13 +350,13 @@ subnet 192.168.122.0 netmask 255.255.255.0 {
 
 restart AppArmor:
 
-```Bash
+```bash
 # apparmor_parser -r /etc/apparmor.d/usr.sbin.dhcpd  
 ```
 
   **restart/refresh DNS & DHCP**
   
-```Bash
+```bash
 # named-checkzone foreman.de /etc/bind/zones/foreman.de
 # named-checkzone foreman.de /etc/bind/zones/foreman.de.rev
 # named-checkconf /etc/bind/named.conf.options
@@ -375,7 +375,7 @@ restart AppArmor:
 > -  <u>*but dont upgrade foreman to use managed DNS & DHCP  yet!!*</u>
 > - ***set managed DNS & DHCP to false:***
 
->```Bash
+>```bash
 >foreman-installer \ 
 >--foreman-proxy-dns true \
 >--foreman-proxy-dns-managed false \ 
@@ -427,13 +427,13 @@ LABEL discovery
 
  install isc-dhcp-server
 
-```Bash
+```bash
 # apt install isc-dhcp-server -y
 ```
 
  configure Firewall (debian)
 
-```Bash
+```bash
 # sudo apt-get install iptables-persistent netfilter-persistent
 # sudo iptables -A INPUT -p tcp --dport 7911 -j 
 # sudo iptables -A INPUT -p tcp --syn --dport 2049 -j 
@@ -450,7 +450,7 @@ LABEL discovery
 
 ***add the Foreman user***
 
-```Bash
+```bash
   #  useradd -u 982 -g 982 -s /sbin/nologin foreman
   #  sudo usermod -u 982 -g 982 foreman 
   ```
@@ -462,7 +462,7 @@ LABEL discovery
 
    restore the read and execute flags:
    
-```Bash
+```bash
     # chmod o+rx /etc/dhcp/
     # chmod o+r /etc/dhcp/dhcpd.conf
     # chattr +i /etc/dhcp/ /etc/dhcp/dhcpd.conf
@@ -475,7 +475,7 @@ LABEL discovery
 
 install nfs and  create the export paths
 
-```Bash
+```bash
   #  sudo apt-get install nfs-kernel-server
   #  systemctl enable --now nfs-server
   #  mkdir -p /exports/var/lib/dhcpd /exports/etc/dhcp
@@ -483,7 +483,7 @@ install nfs and  create the export paths
 
  start the nfs server
  
-```Bash
+```bash
  # systemctl enable --now nfs-server
  ```
 
@@ -494,7 +494,7 @@ install nfs and  create the export paths
 
  edit the fstab for persistent nfs export
 
-```Bash
+```bash
 # nano /etc/fstab
 ```
 
@@ -505,14 +505,14 @@ install nfs and  create the export paths
 
  reload the Daemon and mount everything in fstab using `mount -a`
 
-```Bash
+```bash
 # systemctl daemon-reload
 # mount -a
 ```
 
  edit the exports file and activate our nfs
 
-```Bash
+```bash
 # nano /etc/exports
 # exportfs -rva
 ```
@@ -528,7 +528,7 @@ install nfs and  create the export paths
 
 ***omapi-key***
 
-```Bash
+```bash
 # cd /etc/bind
 # ssec-keygen -a DH -b 512 -n HOST omapi_key
 # ls
@@ -693,7 +693,7 @@ copy the `rndc.key` from the external machine to the foreman machine
 
 ***external DNS&DHCP-Management Upgrade***
 
-```Bash
+```bash
   foreman-installer \ 
   --foreman-proxy-dns true \
   --foreman-proxy-dns-managed true \
