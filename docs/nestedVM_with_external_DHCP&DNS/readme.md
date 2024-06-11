@@ -10,9 +10,8 @@
 
 
 ## *Foreman in a nested VM* managing external DNS & DHCP with Dynamic Updates using RNDC key
-> - we will install & configure a Foreman-machine running inside a `Rocky Linux`-based VM
+> - we will install & configure a Foreman-machine running inside a `Rocky Linux`-based nested VM
 > - we will install & configure our DHCP & DNS in `a seperate Debian-based VM`
-> - we install foreman inside a nested VM
 > - we set up our DHCP & DNS for Dynamic Updates using RNDC
 > - we configure our DHCP to share its leases using omapi(HMAC-MD5) key and NFS
 > - we configure Foreman to manage our external DNS by importing the RNDC key
