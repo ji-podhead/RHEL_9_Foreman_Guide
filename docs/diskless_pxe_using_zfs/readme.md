@@ -20,14 +20,19 @@
 
 
 ***add the disk’s that we need for the tank to our wm***
+
 ![add_disk](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/zfs1_kvm_add_disk.png?raw=true)
+
 ***create zfs called tank***
+
 ![create_tank](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/zfs2_creating_zfs.png?raw=true)
+
 ***create datasets for our zfs tank in proxmox shell:***
-```Bash
-# zfs create tank/backups
-# zfs create tank/isos
-# zfs create tank/diskstorage
+
+```bash
+$ zfs create tank/backups
+$ zfs create tank/isos
+$ zfs create tank/diskstorage
 ```
 ***check it out:***
 ```bash
