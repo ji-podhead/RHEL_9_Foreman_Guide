@@ -34,13 +34,20 @@
 ## 5. [Proxmox](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/proxmox)
 >  - we install proxmox inside a vm using kvm&libvirt 
 >  - we setup proxmox as a compute resource
-
-## 6. [diskless pxe-boot using zfs](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/diskless_pxe_using_zfs) *(under construction)*
+## 6. [Install Foreman with external DHCP & DNS](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/nestedVM_with_external_DHCP%26DNS)
+>  - we install foreman inside a nested VM
+>  - we set up our DHCP & DNS for Dynamic Updates using RNDC 
+>  - we configure our DHCP to share its leases using omapi(HMAC-MD5) key and NFS
+>  - we configure Foreman to manage our external DNS by importing the RNDC key
+>  - we configure Foreman to manage our external DHCP by using remote-isc-key flag and our omapi key   
+## 7. [diskless pxe-boot using zfs](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/diskless_pxe_using_zfs) *(under construction)*
 > - we create a zfs tank inside proxmox
 > - we create a wm inside proxmox and move the storage to our zfs tank *(optional)*
 > - we create a automatic backup-plan for the wm *(optional)*
 > - we create a pxe template inside foreman to pxe-boot diskless using the zfs tank storage 
+
 ---
+
 # Roadmap
 - ~~libvirt~~ ✓
 - ~~proxmox~~ ✓
