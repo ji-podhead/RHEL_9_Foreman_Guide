@@ -8,42 +8,7 @@
 
 
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CSS Table Example</title>
-    <!-- Link to your compiled CSS file -->
-    <link rel="stylesheet" href="/path/to/your/css/table.css">
-</head>
-<body>
 
-<div class="table">
-    <div class="tbl-col-group">
-        <div class="tbl-col">Column 1</div>
-        <div class="tbl-col">Column 2</div>
-        <div class="tbl-col">Column 3</div>
-        <div class="tbl-col">Column 4</div>
-    </div>
-    <div class="tbl-header">
-        <div class="tbl-row">
-            <div class="tbl-cell">Header 1</div>
-            <div class="tbl-cell">Header 2</div>
-            <div class="tbl-cell">Header 3</div>
-            <div class="tbl-cell">Header 4</div>
-        </div>
-    </div>
-    <div class="tbl-body">
-        <div class="tbl-row">
-            <div class="tbl-cell">Data 1</div>
-            <div class="tbl-cell">Data 2</div>
-            <div class="tbl-cell">Data 3</div>
-            <div class="tbl-cell">Data 4</div>
-        </div>
-        <!-- Add more rows as needed -->
-    </div>
-</div>
-</body>
-</html>
 
 
 
@@ -109,7 +74,7 @@
     </tr>
 </table>
 </div>
-
+</html>
 ---
 
  ***Please proceed with the DNS section of my [DNS-Network Guide](https://ji-podhead.github.io/Network-Guides/DNS/install/) if needed:***
