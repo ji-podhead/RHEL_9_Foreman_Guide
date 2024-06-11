@@ -4,6 +4,22 @@
 ---
 
 # Discovery and Provisioning
+
+
+## Discovery walktrough and debugging
+   <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/final_discovery_nestedv_flowchart.png?raw=true" align="center" />
+   
+[Full Image](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/final_discovery_nestedv_flowchart.png?raw=true)  [Complete Logs](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP%26DNS/discovery.log)
+
+### Debugging
+- `tail /var/logs/foreman/production.log -f`
+- `journalctl -u named.service -f`
+- `journalctl -u isc-dhcp-server -f`
+- `sudo journalctl -u tftp`
+- `nslookup <FQDN/ip> <DNS>`
+- [additional debugging steps with complete description](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
+
+---
  
 ## Discovery
 ***Change PXE global temlate***
@@ -38,20 +54,6 @@
 > 
 > - our discovered host is ready to get provisioned:
 > ![discovered_host](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/img/discovered_host.jpg?raw=true)
-
-
-## Discovery walktrough and debugging
-   <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/final_discovery_nestedv_flowchart.png?raw=true" align="center" />
-   
-[Full Image](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/final_discovery_nestedv_flowchart.png?raw=true)  [Complete Logs](https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP%26DNS/discovery.log)
-
-## Debugging
-- `tail /var/logs/foreman/production.log -f`
-- `journalctl -u named.service -f`
-- `journalctl -u isc-dhcp-server -f`
-- `sudo journalctl -u tftp`
-- `nslookup <FQDN/ip> <DNS>`
-- [additional debugging steps with complete description](https://ji-podhead.github.io/Network-Guides/DNS/testAndDebug)
 
 
 ---
