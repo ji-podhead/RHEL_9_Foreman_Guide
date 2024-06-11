@@ -108,17 +108,16 @@
 	- I coulnd get my DHCP on my Foreman Machine to work with the provided Proxmox-NIC
 - we create a `RNDC-key` and set up `dynamic updates` in our DHCP and DNS 
 - **Foreman wont register your machines, even if they have a valid tftp connection, unless you share the leases of DHCP!** 
-> otherwise you will get this error in the proxy logs: 
->```json
->// Started POST /api/v2/discovered_hosts/facts
->// Finished POST /api/v2/discovered_hosts/facts with 404 (1.07 ms) 
->```
+> otherwise you will get this error in the proxy logs: <br>
+>	<mark style="background-color: red;">Started POST/api/v2/discovered_hosts/facts </mark> <br>
+>	<mark style="background-color: red;">Finished POST /api/v2/discovered_hosts/facts with 404 (1.07 ms)</mark> <br>
 > and the discovery image will post a  <mark style="background-color: red;">404</mark> as well:
 >
 > <img src="https://github.com/ji-podhead/RHEL_9_Foreman_Guide/blob/main/docs/nestedVM_with_external_DHCP&DNS/images/foreman_nestedVM_failed.png?raw=true" align="center" height="200" />
 >
 > - ***Therefore these procedures have to get accomplished:***
->  	1.  [Configuring an external DHCP server to use with Foreman server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#configuring-an-external-dhcp-server_foreman)   
+>   
+>  	1.  [Configuring an external DHCP server to use with Foreman server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#configuring-an-external-dhcp-server_foreman)   <br>
 >  	2.  [Configuring Foreman server with an external DHCP server](https://docs.theforeman.org/nightly/Installing_Server/index-foreman-deb.html#Configuring_Server_with_an_External_DHCP_Server_foreman)
 > - *both procedures will be covered in this  guide*
 - I was to lazy and directly installed the external servers on my Proxmox-Machine, which is stupid:
@@ -416,6 +415,7 @@ LABEL discovery
 - everything you need to know is explained in detail in the [discovery & provisioning section](https://ji-podhead.github.io/RHEL_9_Foreman_Guide/discovery%20and%20provisioning)
 
 ---
+
 <u>*we will not upgrade Foreman to manage DNS & DHCP yet!*</u>
 > -  first we need to configure our DNS & DHCP, as well as Foreman to manage our external servers,  which we will do int the next step 
 
@@ -461,6 +461,7 @@ LABEL discovery
 >```
 
    restore the read and execute flags:
+   
 ```Bash
     # chmod o+rx /etc/dhcp/
     # chmod o+r /etc/dhcp/dhcpd.conf
@@ -481,6 +482,7 @@ install nfs and  create the export paths
 ```
 
  start the nfs server
+ 
 ```Bash
  # systemctl enable --now nfs-server
  ```
