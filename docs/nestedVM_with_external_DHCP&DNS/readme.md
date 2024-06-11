@@ -357,7 +357,7 @@ restart AppArmor:
 
   **restart/refresh DNS & DHCP**
   
-```Bash
+```bash
  $ named-checkzone foreman.de /etc/bind/zones/foreman.de
  $ named-checkzone foreman.de /etc/bind/zones/foreman.de.rev
  $ named-checkconf /etc/bind/named.conf.options
