@@ -595,6 +595,11 @@ edit `/etc/fstab`
 >
 >192.168.122.7:/exports/var/lib/dhcpd /mnt/nfs/var/lib/dhcpd
 >ro,vers=3,auto,nosharecache,context="system_u:object_r:dhcpd_state_t:s0" 0 0
+>############################################################################
+>#			>> ALTERNATIVE IF IN CASE OF FAIL <<
+>#192.168.122.7:/exports/etc/dhcp /mnt/nfs/etc/dhcp nfs vers=3,ro,nosharecache,context="system_u:object_r:dhcp_etc_t:s0" 0 0
+>#192.168.122.7:/exports/var/lib/dhcpd /mnt/nfs/var/lib/dhcpd nfs vers=3,ro,nosharecache,context="system_u:object_r:dhcpd_state_t:s0" 0 0
+>############################################################################
 >```
 
 reload the daemon and mount:
