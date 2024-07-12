@@ -1,6 +1,10 @@
 
 # RHEL9 Foreman Guide
 
+<div align="center">
+      <img src="https://github.com/ji-podhead/ji-podhead/blob/main/logo.jpg?raw=true" align="right" width="150" />
+</div>
+
 > - In this Guide i will show you how to install Forman with puppet, katello and discovery plugin.
 > - You will also learn how to install and setup DHCP- and TFTP-Server.
 > - I will also show you how to setup Foreman and how to use the Foreman Boot Image via PXE.
